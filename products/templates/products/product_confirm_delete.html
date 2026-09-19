@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete {{ product.name}}</title>
+</head>
+<body>
+    
+    <form  method="post">
+        {% csrf_token %}
+        <p>Supprimer {{product.name}}</p>
+        <button type="submit">supprimer</button>
+    </form>
+    <a href="{% url 'product_list' %}">Retourner à la liste des produits</a>
+</body>
+</html>

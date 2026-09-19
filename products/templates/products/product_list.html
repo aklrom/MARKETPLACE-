@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketPlace</title>
+</head>
+<body>
+    <h1>Produits disponibles</h1>
+    {% for product in products %}
+        <article>
+            <h2><a href="{% url 'product_detail' product.id %}">{{product.name}}</a></h2>
+            <p>{{ product.description }}</p>
+
+            <p>Prix : {{ product.price }} FCFA</p>
+
+            <p>Catégorie : {{ product.category.name }}</p>
+
+            <p>Vendeur : {{ product.seller.username }}</p>
+
+            <p>Quantité : {{ product.quantity }}</p>
+        </article>
+    {% empty %}
+        <p>Aucun produit disponible</p>
+    {% endfor %}        
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{product.name}}</title>
+</head>
+<body>
+    <h1>{{ product.name }}</h1>
+
+    <p>{{ product.description }}</p>
+
+    <p>Prix : {{ product.price }} FCFA</p>
+
+    <p>Catégorie : {{ product.category.name }}</p>
+
+    <p>Vendeur : {{ product.seller.username }}</p>
+
+    <p>Quantité disponible : {{ product.quantity }}</p>
+
+    <p>État : {{ product.condition }}</p>
+
+    <p>Statut : {{ product.status }}</p>
+    {% if user == product.seller %}
+        <a href="{% url 'product_delete' product.id %}">Supprimer cet article</a>
+        <a href="{% url 'product_update' product.id %}">Modifier cette annonce</a>
+    {% endif %}
+   <!-- <button type="submit"><a href="{% url 'product_buy' product.id %}">Commander</a></button> -->
+   <a href="{% url 'add_to_cart' product.id %}">
+    Ajouter au panier
+    </a>
+    <h3>{{message}}</h3>
+    <a href="{% url 'product_list' %}">Retour aux produits</a>
+</body>
+</html>

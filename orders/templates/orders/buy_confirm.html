@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmer la commande</title>
+</head>
+<body>
+
+    <h2>Confirmer la commande</h2>
+
+    <p>
+        Voulez-vous commander :
+        <strong>{{ product.name }}</strong> ?
+    </p>
+
+    <p>Prix : {{ product.price }} FCFA</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmer la commande</button>
+    </form>
+
+    <a href="{% url 'product_detail' product.id %}">
+        Annuler
+    </a>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon panier</title>
+</head>
+<body>
+    <form  method="post" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <h1>Mon panier</h1>
+        {% for product in cart_list %}
+            <article>
+                <h3>{{product.name}}</h3>
+                <p><strong>Quantité:</strong>{{product.quantity}}</p>
+                <p><strong>Prix unitaire:</strong>{{product.price}}</p>
+                <p><strong>Total:</strong>{{product.sous_total}}</p>
+                <a href="{% url 'increase_quantity' product.id %}">Augmenter</a><a href="{% url 'decrease_quantity' product.id %}">Diminuer</a><a href="{% url 'delete_product_in_cart' product.id %}">supprimer</a>
+                <hr>
+            </article>
+        {% empty %}
+            <p>Votre panier est actuellement vide</p>   
+        {% endfor %}
+        <p><strong>A payer:</strong>{{sous_a_payer}}</p> 
+        <button type="submit">Valider la commande</button>
+         
+    </form>      
+</body>
+</html>

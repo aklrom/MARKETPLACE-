@@ -1,0 +1,748 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dashboard — Marketplace</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'accounts/dashboard.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav class="top-nav">
+
+        <a href="{% url 'product_list' %}" class="brand">
+            MARKET<span>PLACE</span>
+        </a>
+
+        <div class="nav-links">
+
+            <a href="{% url 'product_list' %}">
+                Marketplace
+            </a>
+
+            <a href="{% url 'orders_list' %}">
+                Mes commandes
+            </a>
+
+            <a href="{% url 'dashboard' %}" class="active">
+                Dashboard
+            </a>
+
+            <a href="{% url 'logout' %}">
+                Déconnexion
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="dashboard">
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header reveal">
+
+            <div>
+
+                <h1>
+                    Bonjour,
+                    <span>{{ user.username }}</span>
+                </h1>
+
+                <p>
+                    Voici l'état actuel de votre activité.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- STATISTIQUES -->
+
+        <section class="stats reveal">
+
+            <div class="stat-card">
+
+                <span class="stat-label">
+                    Mes annonces
+                </span>
+
+                <strong
+                    class="stat-value"
+                    data-counter="{{ products|length }}"
+                >
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-label">
+                    Mes achats
+                </span>
+
+                <strong
+                    class="stat-value"
+                    data-counter="{{ purchases|length }}"
+                >
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-label">
+                    Commandes reçues
+                </span>
+
+                <strong
+                    class="stat-value"
+                    data-counter="{{ received_orders|length }}"
+                >
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-label">
+                    Mes ventes
+                </span>
+
+                <strong
+                    class="stat-value"
+                    data-counter="{{ sales|length }}"
+                >
+                    0
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- MES PRODUITS -->
+
+        <section class="dashboard-section reveal">
+
+            <div class="section-heading">
+
+                <h2>
+                    Mes produits
+                </h2>
+
+                <span>
+                    {{ products|length }} produit(s)
+                </span>
+
+            </div>
+
+
+            <div class="items">
+
+                {% for product in products %}
+
+                    <article class="item">
+
+                        <div class="item-main">
+
+                            <h3>
+                                {{ product.name }}
+                            </h3>
+
+                            <p>
+                                {{ product.price }} FCFA
+                                ·
+                                {{ product.quantity }} disponible(s)
+                            </p>
+
+                        </div>
+
+
+                        <div class="item-actions">
+
+                            <a
+                                class="btn"
+                                href="{% url 'product_detail' product.id %}"
+                            >
+                                Voir
+                            </a>
+
+
+                            <a
+                                class="btn"
+                                href="{% url 'product_update' product.id %}"
+                            >
+                                Modifier
+                            </a>
+
+
+                            <a
+                                class="btn btn-danger"
+                                href="{% url 'product_delete' product.id %}"
+                            >
+                                Supprimer
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <div class="empty">
+                        Vous n'avez encore publié aucun produit.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- MES ACHATS -->
+
+<section class="dashboard-section reveal">
+    <div class="section-heading">
+        <h2>
+            Mes achats
+        </h2>
+
+        <span>
+            {{ purchases|length }} commande(s)
+        </span>
+    </div>
+
+    <div class="items">
+
+        {% for order in purchases %}
+
+            <article class="item">
+
+                <div class="item-main">
+
+                    <h3>
+                        {{ order.product.name }}
+                    </h3>
+
+                    <p>
+                        Quantité :
+                        {{ order.quantity }}
+                        ·
+                        {{ order.unit_price }} FCFA
+                    </p>
+
+                    <p>
+                        Statut :
+
+                        <span class="
+                            status
+                            {% if order.status == 'pending' %}
+                                status-pending
+                            {% elif order.status == 'completed' %}
+                                status-confirmed
+                            {% else %}
+                                status-cancelled
+                            {% endif %}
+                        ">
+                            {{ order.get_status_display }}
+                        </span>
+                    </p>
+
+                </div>
+
+
+                <!-- ANNULER -->
+
+                {% if order.status == "pending" and not order.seller_status %}
+
+                    <div class="item-actions">
+
+                        <form
+                            method="post"
+                            action="{% url 'cancel_order' order.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                class="btn btn-danger"
+                                type="submit"
+                            >
+                                Annuler
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                {% endif %}
+
+            </article>
+
+        {% empty %}
+
+            <div class="empty">
+                Vous n'avez encore effectué aucun achat.
+            </div>
+
+        {% endfor %}
+
+    </div>
+</section>
+
+
+<!-- COMMANDES REÇUES -->
+
+<section class="dashboard-section reveal">
+
+    <div class="section-heading">
+
+        <h2>
+            Mes commandes reçues
+        </h2>
+
+        <span>
+            {{ received_orders|length }} commande(s)
+        </span>
+
+    </div>
+
+
+    <div class="items">
+
+        {% for order in received_orders %}
+
+            <article class="item">
+
+                <div class="item-main">
+
+                    <h3>
+                        {{ order.product.name }}
+                    </h3>
+
+                    <p>
+                        Acheteur :
+                        {{ order.buyer.username }}
+                    </p>
+
+                    <p>
+                        Quantité :
+                        {{ order.quantity }}
+                        ·
+                        {{ order.unit_price }} FCFA
+                    </p>
+
+                    <p>
+                        Statut :
+
+                        <span class="
+                            status
+                            {% if order.status == 'pending' %}
+                                status-pending
+                            {% elif order.status == 'completed' %}
+                                status-confirmed
+                            {% else %}
+                                status-cancelled
+                            {% endif %}
+                        ">
+                            {{ order.get_status_display }}
+                        </span>
+                    </p>
+
+                </div>
+
+
+                <div class="item-actions">
+
+                    <!-- CONFIRMATION ACHETEUR -->
+
+                    {% if request.user == order.buyer and order.status == "pending" and not order.buyer_status %}
+
+                        <form
+                            method="post"
+                            action="{% url 'buyer_status_confirm' order.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                class="btn btn-primary"
+                                type="submit"
+                            >
+                                Confirmer
+                            </button>
+
+                        </form>
+
+
+                    <!-- CONFIRMATION VENDEUR -->
+
+                    {% elif request.user == order.product.seller and order.status == "pending" and not order.seller_status %}
+
+                        <form
+                            method="post"
+                            action="{% url 'seller_status_confirm' order.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                class="btn btn-primary"
+                                type="submit"
+                            >
+                                Confirmer
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+
+                    <!-- ANNULER -->
+
+                    {% if order.status == "pending" and not order.seller_status %}
+
+                        <form
+                            method="post"
+                            action="{% url 'cancel_order' order.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                class="btn btn-danger"
+                                type="submit"
+                            >
+                                Annuler
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+        {% empty %}
+
+            <div class="empty">
+                Vous n'avez aucune commande en attente.
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- MES VENTES -->
+
+<section class="dashboard-section reveal">
+
+    <div class="section-heading">
+
+        <h2>
+            Mes ventes
+        </h2>
+
+        <span>
+            {{ sales|length }} vente(s)
+        </span>
+
+    </div>
+
+
+    <div class="items">
+
+        {% for sale in sales %}
+
+            <article class="item">
+
+                <div class="item-main">
+
+                    <h3>
+                        {{ sale.product.name }}
+                    </h3>
+
+                    <p>
+                        Acheteur :
+                        {{ sale.buyer.username }}
+                    </p>
+
+                    <p>
+                        Quantité :
+                        {{ sale.quantity }}
+                        ·
+                        {{ sale.unit_price }} FCFA
+                    </p>
+
+                    <p>
+                        Statut :
+
+                        <span class="
+                            status
+                            {% if sale.status == 'pending' %}
+                                status-pending
+                            {% elif sale.status == 'completed' %}
+                                status-confirmed
+                            {% else %}
+                                status-cancelled
+                            {% endif %}
+                        ">
+                            {{ sale.get_status_display }}
+                        </span>
+                    </p>
+
+                </div>
+
+            </article>
+
+        {% empty %}
+
+            <div class="empty">
+                Vous n'avez encore réalisé aucune vente.
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+        <!-- COMMANDES REÇUES -->
+
+        <section class="dashboard-section reveal">
+
+            <div class="section-heading">
+
+                <h2>
+                    Mes commandes reçues
+                </h2>
+
+                <span>
+                    {{ received_orders|length }} commande(s)
+                </span>
+
+            </div>
+
+
+            <div class="items">
+
+                {% for order in received_orders %}
+
+                    <article class="item">
+
+                        <div class="item-main">
+
+                            <h3>
+                                {{ order.product.name }}
+                            </h3>
+
+
+                            <p>
+                                Acheteur :
+                                {{ order.buyer.username }}
+                            </p>
+
+
+                            <p>
+                                Quantité :
+                                {{ order.quantity }}
+                                ·
+                                {{ order.unit_price }} FCFA
+                            </p>
+
+
+                            <p>
+
+                                Statut :
+
+                                <span class="status status-pending">
+                                    {{ order.status }}
+                                </span>
+
+                            </p>
+
+                        </div>
+
+
+                        <div class="item-actions">
+
+                            <!-- CONFIRMER -->
+                            {% if request.user == order.buyer and order.status == "pending"  %}
+                                <form
+                                    method="post"
+                                    action="{% url 'buyer_status_confirm' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        class="btn btn-primary"
+                                        type="submit"
+                                    >
+                                        Confirmer
+                                    </button>
+
+                                </form>
+                            {% elif request.user == order.product.seller and order.status == "pending" %}    
+                                <form
+                                    method="post"
+                                    action="{% url 'seller_status_confirm' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        class="btn btn-primary"
+                                        type="submit"
+                                    >
+                                        Confirmer
+                                    </button>
+
+                                </form>
+                            {% endif %}    
+                            <!-- ANNULER -->
+                            {% if order.status == "pending" and not order.seller_status %}    
+                                <form
+                                    method="post"
+                                    action="{% url 'cancel_order' order.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        class="btn btn-danger"
+                                        type="submit"
+                                    >
+                                        Annuler
+                                    </button>
+
+                                </form>
+                            {% endif %}    
+
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <div class="empty">
+                        Vous n'avez aucune commande en attente.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- MES VENTES -->
+
+        <section class="dashboard-section reveal">
+
+            <div class="section-heading">
+
+                <h2>
+                    Mes ventes
+                </h2>
+
+                <span>
+                    {{ sales|length }} vente(s)
+                </span>
+
+            </div>
+
+
+            <div class="items">
+
+                {% for sale in sales %}
+
+                    <article class="item">
+
+                        <div class="item-main">
+
+                            <h3>
+                                {{ sale.product.name }}
+                            </h3>
+
+
+                            <p>
+                                Acheteur :
+                                {{ sale.buyer.username }}
+                            </p>
+
+
+                            <p>
+                                Quantité :
+                                {{ sale.quantity }}
+                                ·
+                                {{ sale.unit_price }} FCFA
+                            </p>
+
+
+                            <p>
+
+                                Statut :
+
+                                <span class="status status-confirmed">
+                                    {{ sale.get_status_display }}
+                                </span>
+
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <div class="empty">
+                        Vous n'avez encore réalisé aucune vente.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <script src="{% static 'accounts/dashboard.js' %}"></script>
+
+</body>
+
+</html>
