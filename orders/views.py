@@ -51,7 +51,7 @@ def seller_status_confirm(request,id):
         "Cette commande ne peut pas encore être validée."
     )
     if request.user!=order.product.seller or order.seller_status:
-        return HttpResponseForbidden("Vous n'etes pas autorisé à agir .")
+        return HttpResponseForbidden("Vous n'etes pas autorisé à agir  ou  vous avez deja validé")
     with transaction.atomic():
         order.seller_status=True
         if order.seller_status and order.buyer_status:
@@ -72,7 +72,7 @@ def buyer_status_confirm(request,id):
         "Cette commande ne peut pas encore être validée."
     )
     if request.user!=order.buyer or order.buyer_status:
-        return HttpResponseForbidden("Vous n'etes pas autorisé à agir .")
+        return HttpResponseForbidden("Vous n'etes pas autorisé à agir ou vous avez deja confirmé")
     with transaction.atomic():
         order.buyer_status=True
         if order.seller_status and order.buyer_status:

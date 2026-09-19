@@ -10,7 +10,7 @@
     <form  method="post">
         {% csrf_token %}
         <p>Supprimer {{product.name}}</p>
-        <button type="submit">supprimer</button>
+        <button type="submit">retirer du catalogue</button>
     </form>
     <a href="{% url 'product_list' %}">Retourner à la liste des produits</a>
 </body>

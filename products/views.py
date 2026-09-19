@@ -7,13 +7,13 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseForbidden
 
 def product_list(request):
-    products=Product.objects.all()
+    products=Product.objects.filter(is_active=True)
 
     return render(request,"products/product_list.html",{"products":products})
 
 
 def product_detail(request,id):
-    product=Product.objects.get(id=id)
+    product=get_object_or_404(Product,id=id)
     return render(request,"products/product_detail.html",{"product":product})
 
 @login_required
@@ -67,10 +67,11 @@ def product_delete(request,id):
 
     if product.seller!=request.user:
         return HttpResponseForbidden("Vous ne pouver pas supprimer cet article")
-
     if request.method == "POST":
-        product.delete()
+        product.is_active=False
+        product.save()
         return redirect("product_list")
 
     return render(request,"products/product_confirm_delete.html",{"product":product})
 # Create your views here.
+

@@ -22,7 +22,7 @@ class Product(models.Model):
         on_delete=models.PROTECT,
         related_name="products"
     )
-
+    is_active=models.BooleanField(default=True, verbose_name="Article actif /En vente")
     name=models.CharField(max_length=200)
     description=models.TextField()
     price=models.DecimalField(max_digits=10,decimal_places=2)

@@ -33,7 +33,7 @@ def login_view(request):
 
 @login_required
 def dashboard(request):
-    products=Product.objects.filter(seller=request.user)
+    products=Product.objects.filter(seller=request.user,is_active=True)
     purchases=Order.objects.filter(buyer=request.user)
     received_orders=Order.objects.filter(product__seller=request.user,status="pending")
     sales=Order.objects.filter(product__seller=request.user , status="confirmed")

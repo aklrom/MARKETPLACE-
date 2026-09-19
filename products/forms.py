@@ -11,4 +11,5 @@ class ProductForm(forms.ModelForm):
             "price",
             "quantity",
             "condition",
+            "is_active",
         ]

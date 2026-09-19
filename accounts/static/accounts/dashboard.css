@@ -34,7 +34,7 @@ span{
     color:rgb(240, 135, 16);
 }
 .top-nav div{
-    width:65%;
+    width:30%;
     display:flex;
     justify-content: space-between;
     gap:15px;

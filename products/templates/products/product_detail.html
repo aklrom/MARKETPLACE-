@@ -22,10 +22,9 @@
 
     <p>Statut : {{ product.status }}</p>
     {% if user == product.seller %}
-        <a href="{% url 'product_delete' product.id %}">Supprimer cet article</a>
+        <a href="{% url 'product_delete' product.id %}">Retirer du catalogue</a>
         <a href="{% url 'product_update' product.id %}">Modifier cette annonce</a>
     {% endif %}
-   <!-- <button type="submit"><a href="{% url 'product_buy' product.id %}">Commander</a></button> -->
    <a href="{% url 'add_to_cart' product.id %}">
     Ajouter au panier
     </a>
