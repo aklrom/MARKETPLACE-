@@ -74,12 +74,15 @@ def buyer_status_confirm(request,id):
     if request.user!=order.buyer or order.buyer_status:
         return HttpResponseForbidden("Vous n'etes pas autorisé à agir ou vous avez deja confirmé")
     with transaction.atomic():
-        order.buyer_status=True
+        order.buyer_status = True
         if order.seller_status and order.buyer_status:
-                order.status="completed"
-                conversation=get_object_or_404(Conversation,order=order)
-                conversation.delete()
+            order.status = "completed"
+            
+            # Correction : Supprime la conversation de manière sécurisée si elle existe
+            Conversation.objects.filter(order=order).delete()
+            
         order.save()
+
     return redirect("dashboard")
 
     

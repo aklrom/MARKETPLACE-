@@ -33,11 +33,12 @@ def login_view(request):
 
 @login_required
 def dashboard(request):
-    products=Product.objects.filter(seller=request.user,is_active=True)
-    purchases=Order.objects.filter(buyer=request.user)
-    received_orders=Order.objects.filter(product__seller=request.user,status="pending")
-    sales=Order.objects.filter(product__seller=request.user , status="confirmed")
-    return render(request,"accounts/dashboard.html",{"products":products,"received_orders":received_orders,"purchases":purchases,"sales":sales}) 
+    products=Product.objects.filter(seller=request.user,is_active=True) # annoncees
+    purchases=Order.objects.filter(buyer=request.user,status="pending")# les commandes que j'ai faite
+    received_orders=Order.objects.filter(product__seller=request.user,status="pending")# les commandes que j'ai reçu
+    sales=Order.objects.filter(product__seller=request.user , status="completed")#mes ventes completées
+    boughts=Order.objects.filter(buyer=request.user,status="completed")# mes achats
+    return render(request,"accounts/dashboard.html",{"products":products,"boughts":boughts,"received_orders":received_orders,"purchases":purchases,"sales":sales}) 
 
 
 def logout_view(request):

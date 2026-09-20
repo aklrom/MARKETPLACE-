@@ -105,7 +105,7 @@
 
                 <strong
                     class="stat-value"
-                    data-counter="{{ purchases|length }}"
+                    data-counter="{{ boughts|length }}"
                 >
                     0
                 </strong>
@@ -217,7 +217,7 @@
                 {% empty %}
 
                     <div class="empty">
-                        Vous n'avez encore publié aucun produit.
+                        Vous n'avez publié aucune annonce.
                     </div>
 
                 {% endfor %}
@@ -227,12 +227,12 @@
         </section>
 
 
-        <!-- MES ACHATS -->
+        <!-- MES commandes -->
 
 <section class="dashboard-section reveal">
     <div class="section-heading">
         <h2>
-            Mes achats
+            Mes Commandes
         </h2>
 
         <span>
@@ -267,7 +267,7 @@
                             {% if order.status == 'pending' %}
                                 status-pending
                             {% elif order.status == 'completed' %}
-                                status-confirmed
+                                status-completed
                             {% else %}
                                 status-cancelled
                             {% endif %}
@@ -304,13 +304,32 @@
                     </div>
 
                 {% endif %}
+                <!-- CONFIRMATION acheteur -->
+                {% if request.user == order.buyer and order.status == "pending"  and not order.buyer_status %}
+                    <div>
+                        <form
+                            method="post"
+                            action="{% url 'buyer_status_confirm' order.id %}"
+                        >
 
+                            {% csrf_token %}
+
+                            <button
+                                class="btn btn-danger"
+                                type="submit"
+                            >
+                                Je confirme avoir reçu ma commande
+                            </button>
+
+                        </form>
+                    </div>
+                {% endif %}    
             </article>
 
         {% empty %}
 
             <div class="empty">
-                Vous n'avez encore effectué aucun achat.
+                Vous n'avez encore effectué aucune commande recente.
             </div>
 
         {% endfor %}
@@ -326,8 +345,7 @@
     <div class="section-heading">
 
         <h2>
-            Mes commandes reçues
-        </h2>
+            Vos commandes à traiter
 
         <span>
             {{ received_orders|length }} commande(s)
@@ -368,7 +386,7 @@
                             {% if order.status == 'pending' %}
                                 status-pending
                             {% elif order.status == 'completed' %}
-                                status-confirmed
+                                status-completed
                             {% else %}
                                 status-cancelled
                             {% endif %}
@@ -382,30 +400,9 @@
 
                 <div class="item-actions">
 
-                    <!-- CONFIRMATION ACHETEUR -->
+                    <!-- CONFIRMATION vendeur -->
 
-                    {% if request.user == order.buyer and order.status == "pending" and not order.buyer_status %}
-
-                        <form
-                            method="post"
-                            action="{% url 'buyer_status_confirm' order.id %}"
-                        >
-
-                            {% csrf_token %}
-
-                            <button
-                                class="btn btn-primary"
-                                type="submit"
-                            >
-                                Confirmer
-                            </button>
-
-                        </form>
-
-
-                    <!-- CONFIRMATION VENDEUR -->
-
-                    {% elif request.user == order.product.seller and order.status == "pending" and not order.seller_status %}
+                    {% if request.user == order.product.seller and order.status == "pending"  and not order.seller_status %}
 
                         <form
                             method="post"
@@ -418,30 +415,7 @@
                                 class="btn btn-primary"
                                 type="submit"
                             >
-                                Confirmer
-                            </button>
-
-                        </form>
-
-                    {% endif %}
-
-
-                    <!-- ANNULER -->
-
-                    {% if order.status == "pending" and not order.seller_status %}
-
-                        <form
-                            method="post"
-                            action="{% url 'cancel_order' order.id %}"
-                        >
-
-                            {% csrf_token %}
-
-                            <button
-                                class="btn btn-danger"
-                                type="submit"
-                            >
-                                Annuler
+                                je confirme avoir délivrer la commande
                             </button>
 
                         </form>
@@ -455,7 +429,7 @@
         {% empty %}
 
             <div class="empty">
-                Vous n'avez aucune commande en attente.
+                Vous n'avez aucune commande à traiter en attente.
             </div>
 
         {% endfor %}
@@ -539,18 +513,18 @@
 
 </section>
 
-        <!-- COMMANDES REÇUES -->
+        <!-- ACHATS -->
 
         <section class="dashboard-section reveal">
 
             <div class="section-heading">
 
                 <h2>
-                    Mes commandes reçues
+                    Mes Achats
                 </h2>
 
                 <span>
-                    {{ received_orders|length }} commande(s)
+                    {{ boughts|length }} achat(s)
                 </span>
 
             </div>
@@ -558,7 +532,7 @@
 
             <div class="items">
 
-                {% for order in received_orders %}
+                {% for order in boughts %}
 
                     <article class="item">
 
@@ -570,8 +544,8 @@
 
 
                             <p>
-                                Acheteur :
-                                {{ order.buyer.username }}
+                                Vendeur :
+                                {{ order.product.seller }}
                             </p>
 
 
@@ -596,147 +570,19 @@
                         </div>
 
 
-                        <div class="item-actions">
-
-                            <!-- CONFIRMER -->
-                            {% if request.user == order.buyer and order.status == "pending"  %}
-                                <form
-                                    method="post"
-                                    action="{% url 'buyer_status_confirm' order.id %}"
-                                >
-
-                                    {% csrf_token %}
-
-                                    <button
-                                        class="btn btn-primary"
-                                        type="submit"
-                                    >
-                                        Confirmer
-                                    </button>
-
-                                </form>
-                            {% elif request.user == order.product.seller and order.status == "pending" %}    
-                                <form
-                                    method="post"
-                                    action="{% url 'seller_status_confirm' order.id %}"
-                                >
-
-                                    {% csrf_token %}
-
-                                    <button
-                                        class="btn btn-primary"
-                                        type="submit"
-                                    >
-                                        Confirmer
-                                    </button>
-
-                                </form>
-                            {% endif %}    
-                            <!-- ANNULER -->
-                            {% if order.status == "pending" and not order.seller_status %}    
-                                <form
-                                    method="post"
-                                    action="{% url 'cancel_order' order.id %}"
-                                >
-
-                                    {% csrf_token %}
-
-                                    <button
-                                        class="btn btn-danger"
-                                        type="submit"
-                                    >
-                                        Annuler
-                                    </button>
-
-                                </form>
-                            {% endif %}    
-
-                        </div>
-
                     </article>
 
                 {% empty %}
 
                     <div class="empty">
-                        Vous n'avez aucune commande en attente.
+                        Vous n'avez encore rien acheter
                     </div>
 
                 {% endfor %}
 
             </div>
 
-        </section>
-
-
-        <!-- MES VENTES -->
-
-        <section class="dashboard-section reveal">
-
-            <div class="section-heading">
-
-                <h2>
-                    Mes ventes
-                </h2>
-
-                <span>
-                    {{ sales|length }} vente(s)
-                </span>
-
-            </div>
-
-
-            <div class="items">
-
-                {% for sale in sales %}
-
-                    <article class="item">
-
-                        <div class="item-main">
-
-                            <h3>
-                                {{ sale.product.name }}
-                            </h3>
-
-
-                            <p>
-                                Acheteur :
-                                {{ sale.buyer.username }}
-                            </p>
-
-
-                            <p>
-                                Quantité :
-                                {{ sale.quantity }}
-                                ·
-                                {{ sale.unit_price }} FCFA
-                            </p>
-
-
-                            <p>
-
-                                Statut :
-
-                                <span class="status status-confirmed">
-                                    {{ sale.get_status_display }}
-                                </span>
-
-                            </p>
-
-                        </div>
-
-                    </article>
-
-                {% empty %}
-
-                    <div class="empty">
-                        Vous n'avez encore réalisé aucune vente.
-                    </div>
-
-                {% endfor %}
-
-            </div>
-
-        </section>
+        
 
     </div>
 
