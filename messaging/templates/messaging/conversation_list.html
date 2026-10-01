@@ -7,9 +7,10 @@
     <title>Vos discussion</title>
 </head>
 <body>
+    <h2>    DISCUSSIONS  </h2>
     <h4>{{message}}</h4>
     {% for dm in conversation_list %}
-        <a href="{% url 'get_conversation' 'message.id' %}">{{dm.order.buyer}}</a>
+        <a href="{% url 'get_messages' dm.id %}">{{dm.mate}}</a>
     {% endfor %}    
 </body>
 </html>

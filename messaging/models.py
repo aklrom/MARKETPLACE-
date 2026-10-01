@@ -4,7 +4,7 @@ from orders.models import Order
 from django.core.exceptions import ValidationError
 
 class Conversation(models.Model):
-
+    is_deleted=models.BooleanField(default=False)
     order=models.OneToOneField(Order,on_delete=models.PROTECT,related_name="conversation")
     created_at=models.DateTimeField(auto_now_add=True)
     class Meta:

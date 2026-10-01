@@ -4,17 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vos discussion</title>
+    <title>joie</title>
 </head>
 <body>
-    {% for message in messages_exchanged %}
-        {% if request.user == message.sender %}
-            <p><strong>{{request.user}}</strong>:{{message.content}}</p>
-        {% else %}
-            <p><strong>{{message.receiver}}</strong>:{{message.content}}</p>  
+    {% for message in message_all %}
+        <p><strong>{{message.sender}}</strong>{{message.content}} ---------{{message.sent_at}}</p> 
+    {% empty %}
+        <p>Aucun message</p>    
     {% endfor %}          
     <form method="POST">
-        <textarea name="content" rows="40" cols="100"></textarea>
+        {% csrf_token %}
+        <textarea name="message" rows="5" cols="70"></textarea>
         <button type="submit">Envoyer</button>
     </form>
 </body>
