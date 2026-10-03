@@ -37,6 +37,7 @@ def cancel_order(request,id):
         product.save()
         conversation=get_object_or_404(Conversation,order=order,is_deleted=False)
         conversation.is_deleted=True
+        conversation.save()
 
     return redirect("dashboard")    
 
@@ -58,7 +59,7 @@ def seller_status_confirm(request,id):
             order.status="completed"
             conversation=Conversation.objects.get(order=order)
             conversation.is_deleted=True
-
+            conversation.save()
         order.save()
     return redirect("dashboard")
 
@@ -81,6 +82,7 @@ def buyer_status_confirm(request,id):
             # Correction : Supprime la conversation de manière sécurisée si elle existe
             conversation=Conversation.objects.get(order=order)
             conversation.is_deleted=True
+            conversation.save()
             
         order.save()
 

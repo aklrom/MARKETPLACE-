@@ -39,7 +39,6 @@ def get_messages(request,id):
             return HttpResponseForbidden("Who are you neiger? Here is not for you")
     if request.method=="POST":
         Message.objects.create(content=request.POST.get("message"),sender=request.user,conversation=dm)
-        redirect ("conversation_list")
     messages_exchanged=Message.objects.filter(conversation=dm)# all the message in this conversation
         
     
