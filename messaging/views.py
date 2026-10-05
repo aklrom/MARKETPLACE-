@@ -39,7 +39,7 @@ def get_messages(request,id):
             return HttpResponseForbidden("Who are you neiger? Here is not for you")
     if request.method=="POST":
         Message.objects.create(content=request.POST.get("message"),sender=request.user,conversation=dm)
-    messages_exchanged=Message.objects.filter(conversation=dm)# all the message in this conversation
+    messages_exchanged=Message.objects.filter(conversation=dm)
         
     
 
@@ -50,5 +50,4 @@ def get_messages(request,id):
 
     return render (request,"messaging/conversation.html",{"message_all":messages_all})
 
-#1 lister  les conversation de l'user connected
-#2vue pour affficher une conversation et envoyer un nouveau message
+
