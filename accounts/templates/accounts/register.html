@@ -1,18 +1,76 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
+    <link rel="stylesheet" href="{% static 'accounts/bootstrap.min.css' %}">
+    
+
+    <link rel="stylesheet" href="{% static 'accounts/register.css' %}">
+
+
 </head>
+
+
 <body>
-    <h1>Creer un compte</h1>
-    <form method="post">
-        {% csrf_token %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+        <!-- col-md-6 signifie que le formulaire prendra la moitié de l'écran sur ordinateur -->
+            <div class="col-12 col-md-6 col-lg-5"> 
+            
+            <!-- La Card qui crée le boîtier blanc stylisé -->
+                <div class="card shadow border-0 p-4">
+                
+                    <h1 class="text-center h3 mb-4">Créer un compte</h1>
+                
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if form.errors %}
+                            <div class="alert alert-danger py-2 fs-7" role="alert">
+                                Veuillez corriger les erreurs ci-dessous.
+                            </div>
+                        {% endif %}
 
-        {{ form.as_p }}
+                        <div class="mb-3"><label class="form-label" id="user_label" for="id_username">Nom d'utilisateur:</label><input aria-labelledby="user_label" id ="id_username" type="text" name="username" class="form-control"></div>
+                        {% if form.username.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.username.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="mb-3"><label class="form-label" id="email_label" for="id_email">Email</label><input aria-labelledby="email_label" type="email" name="email" id="id_email" class="form-control"></div>
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.email.errors }}
+                            </div>
+                        {% endif %}
 
-        <button type="submit">Créer mon compte</button>
-    </form>
+                        <div class="mb-3"><label class="form-label"  id="password1_label" for="id_password1">Mot de passe</label><input aria-labelledby="password1_label" type="password" name="password1" id="id_password1" class="form-control" ></div>
+                        
+
+                        <div id="password-guidelines" style="display:none;">
+                            <ul>
+                                <li id="length-check"> Au moins 8 caractères</li>
+                                <li id="capital-check"> Au moins une majuscule</li>
+                                <li id="number-check"> Au moins un chiffre</li>
+                                <li id="match-check"> Différent du nom d'utilisateur</li>
+                            </ul>
+                        </div>
+                        <div class="mb-3"><label class="form-label" id="password2_label" for="id_password2">Confirmer le mot de passe</label><input aria-labelledby="password2_label" type="password" name="password2" id="id_password2" class="form-control"></div>
+                        {% if form.password2.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.password2.errors }}
+                            </div>
+                        {% endif %}
+                        <button  class="btn btn-primary w-100" type="submit">Créer mon compte</button>
+                    </form>
+                
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'accounts/register.js' %}"></script>
 </body>
 </html>

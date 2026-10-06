@@ -1,0 +1,30 @@
+
+#password-guidelines li{
+    list-style: none;
+    position: relative;
+    padding-left: 25px;
+    transition:color 0.3s ease;
+}
+#password-guidelines li::before {
+    content:"";
+    position:absolute;
+    left: 0;
+    top:4px;
+    width:14px;
+    height:14px;
+    border: 2px solid #dc3545;
+    border-radius:3px;
+}
+#password-guidelines li.is_valid{
+    color:#198754 !important
+}
+#password-guidelines li.is-valid::before {
+        content: "✓";
+        border-color: #198754;
+        background-color: #198754;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        line-height: 10px;
+        text-align: center;
+}
