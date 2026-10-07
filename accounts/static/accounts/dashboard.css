@@ -13,16 +13,27 @@
 }
 
 body{
-    background:whitesmoke;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+    display: flex;
+   justify-content: center;
+   height: 100vh;
+   background-image: url("../images/dash.jpg");
+   background-position: center;
+   background-attachment: fixed;
+   background-repeat: no-repeat;
+
 }
 .top-nav{
     display:flex;
     justify-content: space-between;
     margin:20px auto;
     padding:12px 24px;
-    align-items: end;
-    border-bottom: 4px solid rgb(230, 210, 210); border-radius: 28px;
+    align-items: center;
+    border-radius: 5vh;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 100px white;
+    border: 1px solid white;
+
 }
 .brand{
     font-size: 22px;
@@ -30,9 +41,7 @@ body{
     color:rgb(47, 131, 205);
     font-weight: bold;
 }
-span{
-    color:rgb(240, 135, 16);
-}
+
 .top-nav div{
     width:30%;
     display:flex;
@@ -44,4 +53,61 @@ span{
     color: rgb(47, 131, 205);
     font-size: 14px;
     font-weight: 500;
+}
+.logo{
+    width: 10vh;
+    height: 10vh;
+   
+}
+.tools{
+    height: 30vh;
+    width: 100%;
+    background-color: white;
+    border-radius: 2vh;
+    margin-bottom: 5vh;
+    transition: 1s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.tools:active{
+    border: 1px lightblue solid;
+}
+.tools:hover{
+    transform: translateY(-20px);
+    box-shadow: 0px 10px 10px rgb(146, 126, 115);
+}
+.bod{
+    border: 1px solid white;
+    padding: 5vh;
+   
+    border-radius: 5vh;
+    align-items: center;
+    background-color: rgba(255, 252, 252, 0.4);
+    -webkit-backdrop-filter: blur(8px);
+     backdrop-filter: blur(2px);
+}
+.items{
+    background-color: aliceblue;
+    display: flex;
+    z-index: 2;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    border-radius:5vh;
+}
+.stat-label{
+    color:blue;
+}
+.stat-value{
+    color: orange;
+    font-size: 8vh;
+}
+.title{
+    background-color: rgba(249, 215, 140, 0.5);
+    padding: 5vh;
+    border-radius: 1vh;
+   
+    margin: 10vh;
 }

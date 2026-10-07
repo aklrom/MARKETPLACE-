@@ -13,8 +13,9 @@
     >
 
     <title>Dashboard — Marketplace</title>
-   <link rel="stylesheet" href="">
-    <link
+  <link rel="stylesheet" href="{% static 'accounts/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> 
+  <link
         rel="stylesheet"
         href="{% static 'accounts/dashboard.css' %}"
     >
@@ -26,31 +27,21 @@
 
     <!-- NAVIGATION -->
 
-    <nav class="top-nav">
+  <div class="container">
+      <nav class="top-nav">
 
-        <div><i class="fas fa-store"></i><a href="{% url 'product_list' %}" class="brand">
-            MARKET<span>PLACE</span>
+        <div><a href="{% url 'product_list' %}" class="brand">
+            <div class="logo">
+                      <img src="{% static 'images/logo.jpg' %}" alt="logo" style="witdh:100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            </div>
+       
         </a></div>
 
-        <div class="nav-links">
+      <button class="btn btn-light">
+        <i class="fa-solid fa-bars">
 
-            <a href="{% url 'product_list' %}">
-                Marketplace
-            </a>
-
-            <a href="{% url 'orders_list' %}">
-                Mes commandes
-            </a>
-
-            <a href="{% url 'dashboard' %}" class="active">
-                Dashboard
-            </a>
-
-            <a href="{% url 'logout' %}">
-                Déconnexion
-            </a>
-
-        </div>
+        </i>
+      </button>
 
     </nav>
 
@@ -63,13 +54,13 @@
 
             <div>
 
-                <h1>
-                    Bonjour,
+                <span style="font-size: 10vh; color: rgb(255, 252, 250);">
+                    De retour,
                     <span>{{ user.username }}</span>
-                </h1>
+                </span>
 
                 <p>
-                    Voici l'état actuel de votre activité.
+                    <em style="color: rgb(230, 228, 228);">Voici l'état actuel de votre activité.</em>
                 </p>
 
             </div>
@@ -78,13 +69,12 @@
 
 
         <!-- STATISTIQUES -->
-
-        <section class="stats reveal">
-
-            <div class="stat-card">
-
+ <div class="bod row" style="justify-content: space-between;" >
+           <div class="col-12 col-md-6 col-lg-3">
+            <div class="tools">
+                <i class=" fa-solid fa-bullhorn "  style="font-size: 8vh; color: lightblue;"></i>
                 <span class="stat-label">
-                    Mes annonces
+                  <em>  Mes annonces</em>
                 </span>
 
                 <strong
@@ -95,12 +85,12 @@
                 </strong>
 
             </div>
-
-
-            <div class="stat-card">
-
-                <span class="stat-label">
-                    Mes achats
+           </div>
+           <div class="col-12 col-md-6 col-lg-3">
+            <div class="tools">
+                <i class=" fa-solid fa-bag-shopping "  style="font-size: 8vh; color: lightblue;"></i>
+                 <span class="stat-label">
+                   <em> Mes achats</em>
                 </span>
 
                 <strong
@@ -111,12 +101,12 @@
                 </strong>
 
             </div>
-
-
-            <div class="stat-card">
-
+           </div>
+           <div class="col-12 col-md-6 col-lg-3">
+            <div class="tools">
+                <i class=" fa-solid fa-inbox "  style="font-size: 8vh; color: lightblue;"></i>
                 <span class="stat-label">
-                    Commandes reçues
+                    <em>Commandes reçues</em>
                 </span>
 
                 <strong
@@ -125,14 +115,13 @@
                 >
                     0
                 </strong>
-
             </div>
-
-
-            <div class="stat-card">
-
-                <span class="stat-label">
-                    Mes ventes
+           </div>
+           <div class="col-12 col-md-6 col-lg-3">
+            <div class="tools">
+                <i class=" fa-solid fa-sack-dollar" style="font-size: 8vh; color: lightblue;"></i>
+                 <span class="stat-label">
+                   <em> Mes ventes</em>
                 </span>
 
                 <strong
@@ -141,25 +130,21 @@
                 >
                     0
                 </strong>
-
             </div>
-
-        </section>
+           </div>
+        </div>
 
 
         <!-- MES PRODUITS -->
 
         <section class="dashboard-section reveal">
 
-            <div class="section-heading">
+            <div class="section-heading"  style="margin-top: 10vh;margin-bottom: 1vh; z-index: 1;">
 
-                <h2>
+                <span class="title">
                     Mes produits
-                </h2>
-
-                <span>
-                    {{ products|length }} produit(s)
                 </span>
+
 
             </div>
 
@@ -216,8 +201,9 @@
 
                 {% empty %}
 
-                    <div class="empty">
-                        Vous n'avez publié aucune annonce.
+                    <div class="empty text-center text-muted">
+                        <i class="fa-solid fa-folder-open fa-2x mb-2"></i>
+                      <p>  Vous n'avez publié aucune annonce.</p>
                     </div>
 
                 {% endfor %}
@@ -230,14 +216,11 @@
         <!-- MES commandes -->
 
 <section class="dashboard-section reveal">
-    <div class="section-heading">
-        <h2>
+    <div class="section-heading"  style="margin-top: 10vh;margin-bottom: 1vh; z-index: 1;">
+        <span class="title">
             Mes Commandes
-        </h2>
-
-        <span>
-            {{ purchases|length }} commande(s)
         </span>
+        
     </div>
 
     <div class="items">
@@ -328,9 +311,10 @@
 
         {% empty %}
 
-            <div class="empty">
-                Vous n'avez encore effectué aucune commande recente.
-            </div>
+           <div class="empty text-center text-muted">
+                        <i class="fa-solid fa-calendar fa-2x mb-2"></i>
+                      <p>  Vous n'avez aucune comandes.</p>
+                    </div>
 
         {% endfor %}
 
@@ -342,14 +326,13 @@
 
 <section class="dashboard-section reveal">
 
-    <div class="section-heading">
+    <div class="section-heading"  style="margin-top: 10vh;margin-bottom: 1vh; z-index: 1;">
 
-        <h2>
+        <span class="title">
             Vos commandes à traiter
+        </span>   
 
-        <span>
-            {{ received_orders|length }} commande(s)
-        </span>
+        
 
     </div>
 
@@ -428,9 +411,10 @@
 
         {% empty %}
 
-            <div class="empty">
-                Vous n'avez aucune commande à traiter en attente.
-            </div>
+           <div class="empty text-center text-muted">
+                        <i class="fa-solid fa-box-open fa-2x mb-2"></i>
+                      <p>  Aucune commmabde recue pour le moment.</p>
+                    </div>
 
         {% endfor %}
 
@@ -443,15 +427,13 @@
 
 <section class="dashboard-section reveal">
 
-    <div class="section-heading">
+    <div class="section-heading"   style="margin-top: 10vh;margin-bottom: 1vh; z-index: 1;">
 
-        <h2>
+        <span class="title">
             Mes ventes
-        </h2>
-
-        <span>
-            {{ sales|length }} vente(s)
         </span>
+
+        
 
     </div>
 
@@ -503,9 +485,10 @@
 
         {% empty %}
 
-            <div class="empty">
-                Vous n'avez encore réalisé aucune vente.
-            </div>
+            <div class="empty text-center text-muted">
+                        <i class="fa-solid fa-chart-line fa-2x mb-2"></i>
+                      <p>  Vous n'avez encore realisé aucune vente.</p>
+                    </div>
 
         {% endfor %}
 
@@ -515,18 +498,15 @@
 
         <!-- ACHATS -->
 
-        <section class="dashboard-section reveal">
+        <section class="dashboard-section reveal"  style="margin-top: 10vh;margin-bottom: 5vh">
 
-            <div class="section-heading">
+            <div class="section-heading" style="margin-top: 10vh;margin-bottom: 1vh ;z-index: 1;">
 
-                <h2>
+                <span class="title">
                     Mes Achats
-                </h2>
-
-                <span>
-                    {{ boughts|length }} achat(s)
                 </span>
 
+           
             </div>
 
 
@@ -574,19 +554,22 @@
 
                 {% empty %}
 
-                    <div class="empty">
-                        Vous n'avez encore rien acheter
+                    
+           <div class="empty text-center text-muted">
+                        <i class="fa-solid fa-basket-shopping fa-2x mb-2"></i>
+                      <p>  Vous n'avez encore rien acheté.</p>
                     </div>
 
                 {% endfor %}
 
             </div>
 
-        
+       
 
     </div>
 
 
+  </div>
     <script src="{% static 'accounts/dashboard.js' %}"></script>
 
 </body>
