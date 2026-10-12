@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from .models import Conversation,Message
 from django.shortcuts import get_object_or_404,redirect,render
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden,JsonResponse
 from django.db import transaction
 from orders.models import Order,Product
 from django.db.models import Q
@@ -50,4 +50,22 @@ def get_messages(request,id):
 
     return render (request,"messaging/conversation.html",{"message_all":messages_all})
 
+@login_required
+def get_messages_json(request,id):
+    dm=get_object_or_404(Conversation,id=id,is_deleted=False)
+    buyer=dm.order.buyer
+    seller=dm.order.product.seller
+    if request.user not in [buyer,seller]:
+            return HttpResponseForbidden("Who are you neiger? Here is not for you")
+    
+    messages_exchanged=Message.objects.filter(conversation=dm)
+        
+    
+    
+    messages_all=[]
+    for  message in messages_exchanged:
+        messages_all.append({"content":message.content,"sent_at":message.sent_at,"sender":message.sender})
 
+    return JsonResponse(messages_all)    
+         
+     

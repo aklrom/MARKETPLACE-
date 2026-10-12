@@ -113,3 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+document.querySelectorAll(".nav-toggle-btn").forEach((e)=>{
+     e.addEventListener("click",()=>{
+    document.querySelector(".menu").classList.toggle("act");});
+})
