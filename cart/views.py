@@ -2,7 +2,6 @@ from django.shortcuts import render,get_object_or_404,redirect
 from products.models import Product
 from orders.models import Order
 from django.db import transaction
-from messaging.models import Conversation
 from django.contrib.auth.decorators import login_required
 
 
@@ -162,7 +161,7 @@ def checkout(request):
                     unit_price=product.price
                 )
                 
-                Conversation.objects.create(order=order)
+                
                
 
             # 3. Vider le panier

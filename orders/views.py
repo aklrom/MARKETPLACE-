@@ -4,7 +4,7 @@ from django.http import HttpResponseForbidden
 from products.models import Product
 from .models import Order
 from django.db import transaction
-from messaging.models import Conversation
+
 
 
 @login_required
@@ -35,9 +35,6 @@ def cancel_order(request,id):
         product.quantity+=order.quantity
         order.save()
         product.save()
-        conversation=get_object_or_404(Conversation,order=order,is_deleted=False)
-        conversation.is_deleted=True
-        conversation.save()
 
     return redirect("dashboard")    
 
@@ -57,9 +54,7 @@ def seller_status_confirm(request,id):
         order.seller_status=True
         if order.seller_status and order.buyer_status:
             order.status="completed"
-            conversation=Conversation.objects.get(order=order)
-            conversation.is_deleted=True
-            conversation.save()
+            
         order.save()
     return redirect("dashboard")
 
@@ -78,11 +73,6 @@ def buyer_status_confirm(request,id):
         order.buyer_status = True
         if order.seller_status and order.buyer_status:
             order.status = "completed"
-            
-            # Correction : Supprime la conversation de manière sécurisée si elle existe
-            conversation=Conversation.objects.get(order=order)
-            conversation.is_deleted=True
-            conversation.save()
             
         order.save()
 

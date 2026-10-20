@@ -45,6 +45,12 @@
                                 {{ form.email.errors }}
                             </div>
                         {% endif %}
+                        <div class="mb-3"><label class="form-label" id="phone_label" for="id_phone">Num° Whatsapp </label><input aria-labelledby="phone_label" type="tel" name="phone" id="id_phone" class="form-control"></div>
+                        {% if form.phone_number.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.phone_number.errors }}
+                            </div>
+                        {% endif %}
 
                         <div class="mb-3"><label class="form-label"  id="password1_label" for="id_password1">Mot de passe</label><input aria-labelledby="password1_label" type="password" name="password1" id="id_password1" class="form-control" ></div>
                         
