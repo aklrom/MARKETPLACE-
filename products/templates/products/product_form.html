@@ -1,16 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Product</title>
-</head>
-<body>
-    <h2>Creer un nouveau produit</h2>
-    <form  method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Terminer</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="card shadow border-0 p-4">
+            <h1 class="h3 mb-4">{{ title }}</h1>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger py-2">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                {% for field in form %}
+                    {% if field.field.widget.input_type == "checkbox" %}
+                        <div class="form-check mb-3">
+                            {{ field }}
+                            <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        </div>
+                    {% else %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                    {% endif %}
+                    {% if field.help_text %}<div class="form-text mb-2">{{ field.help_text }}</div>{% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger small mb-2">{{ error }}</div>
+                    {% endfor %}
+                {% endfor %}
+
+                <button class="btn btn-primary w-100" type="submit">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

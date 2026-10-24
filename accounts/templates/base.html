@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Marketplace{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'accounts/bootstrap.min.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand bg-white border-bottom shadow-sm">
+        <div class="container flex-wrap">
+            <a class="navbar-brand fw-bold" href="{% url 'product_list' %}">Marketplace</a>
+            <ul class="navbar-nav ms-auto flex-row flex-wrap gap-3 align-items-center">
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'product_create' %}">Vendre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}">Panier</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'orders_list' %}">Mes commandes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Mon espace</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Déconnexion</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Connexion</a></li>
+                    <li class="nav-item"><a class="btn btn-primary btn-sm" href="{% url 'register' %}">Créer un compte</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container my-4">
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} py-2" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+</body>
+</html>

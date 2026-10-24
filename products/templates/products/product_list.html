@@ -1,27 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MarketPlace</title>
-</head>
-<body>
-    <h1>Produits disponibles</h1>
+{% extends "base.html" %}
+
+{% block title %}Produits{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">Produits en vente</h1>
+
+<div class="row g-3">
     {% for product in products %}
-        <article>
-            <h2><a href="{% url 'product_detail' product.id %}">{{product.name}}</a></h2>
-            <p>{{ product.description }}</p>
-
-            <p>Prix : {{ product.price }} FCFA</p>
-
-            <p>Catégorie : {{ product.category.name }}</p>
-
-            <p>Vendeur : {{ product.seller.username }}</p>
-
-            <p>Quantité : {{ product.quantity }}</p>
-        </article>
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
+                         style="height:180px;object-fit:cover;">
+                {% else %}
+                    <div class="bg-secondary bg-opacity-25 text-muted d-flex align-items-center justify-content-center"
+                         style="height:180px;">Pas de photo</div>
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="h6 card-title">{{ product.name }}</h2>
+                    <p class="text-muted small mb-1">{{ product.category }} · {{ product.get_condition_display }}</p>
+                    <p class="fw-bold mb-0">{{ product.price|floatformat:"-2" }} FCFA</p>
+                </div>
+                <div class="card-footer bg-white border-0 pt-0">
+                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary btn-sm w-100">Voir</a>
+                </div>
+            </div>
+        </div>
     {% empty %}
-        <p>Aucun produit disponible</p>
-    {% endfor %}        
-</body>
-</html>
+        <p class="text-muted">Aucun produit pour le moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}

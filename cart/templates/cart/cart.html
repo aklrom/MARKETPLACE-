@@ -1,29 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon panier</title>
-</head>
-<body>
-    <form  method="post" action="{% url 'checkout' %}">
-        {% csrf_token %}
-        <h1>Mon panier</h1>
-        {% for product in cart_list %}
-            <article>
-                <h3>{{product.name}}</h3>
-                <p><strong>Quantité:</strong>{{product.quantity}}</p>
-                <p><strong>Prix unitaire:</strong>{{product.price}}</p>
-                <p><strong>Total:</strong>{{product.sous_total}}</p>
-                <a href="{% url 'increase_quantity' product.id %}">Augmenter</a><a href="{% url 'decrease_quantity' product.id %}">Diminuer</a><a href="{% url 'delete_product_in_cart' product.id %}">supprimer</a>
-                <hr>
-            </article>
-        {% empty %}
-            <p>Votre panier est actuellement vide</p>   
-        {% endfor %}
-        <p><strong>A payer:</strong>{{sous_a_payer}}</p> 
-        <button type="submit">Valider la commande</button>
-         
-    </form>      
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Mon panier{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">Mon panier</h1>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th class="text-end">Prix</th>
+                    <th class="text-center">Quantité</th>
+                    <th class="text-end">Sous-total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in cart_list %}
+                    <tr {% if line.problem %}class="table-warning"{% endif %}>
+                        <td>
+                            <a href="{% url 'product_detail' line.id %}">{{ line.name }}</a>
+                            {% if line.problem %}<div class="small text-danger">{{ line.problem }}</div>{% endif %}
+                        </td>
+                        <td class="text-end">{{ line.price|floatformat:"-2" }}</td>
+                        <td class="text-center">
+                            <div class="d-inline-flex align-items-center gap-2">
+                                <form method="post" action="{% url 'decrease_quantity' line.id %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-outline-secondary btn-sm" type="submit">−</button>
+                                </form>
+                                <span>{{ line.quantity }}</span>
+                                <form method="post" action="{% url 'increase_quantity' line.id %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-outline-secondary btn-sm" type="submit">+</button>
+                                </form>
+                            </div>
+                        </td>
+                        <td class="text-end">{{ line.sous_total|floatformat:"-2" }}</td>
+                        <td class="text-end">
+                            <form method="post" action="{% url 'delete_product_in_cart' line.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-danger btn-sm" type="submit">Retirer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="3" class="text-end">Total à payer</th>
+                    <th class="text-end">{{ sous_a_payer|floatformat:"-2" }} FCFA</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+{% if has_problem %}
+    <div class="alert alert-warning mt-3 py-2">
+        Certains articles ne sont plus disponibles dans la quantité demandée : ils ne sont pas comptés dans le total.
+        Retirez-les ou ajustez les quantités avant de commander.
+    </div>
+{% endif %}
+
+<form method="post" action="{% url 'checkout' %}" class="mt-3">
+    {% csrf_token %}
+    <button class="btn btn-primary" type="submit" {% if has_problem %}disabled{% endif %}>Passer la commande</button>
+    <a class="btn btn-outline-secondary" href="{% url 'product_list' %}">Continuer mes achats</a>
+</form>
+<p class="small text-muted mt-2">Après la commande, vous pourrez contacter chaque vendeur sur WhatsApp.</p>
+{% endblock %}

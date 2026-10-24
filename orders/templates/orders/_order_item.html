@@ -1,0 +1,66 @@
+
+
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+                <h3 class="h6 mb-1">
+                    <a class="text-decoration-none" href="{% url 'product_detail' order.product.id %}">{{ order.product.name }}</a>
+                </h3>
+                <div class="small text-muted">Commande #{{ order.id }} · {{ order.created_at|date:"d/m/Y H:i" }}</div>
+                <div class="small">
+                    {{ order.quantity }} × {{ order.unit_price|floatformat:"-2" }} FCFA =
+                    <strong>{{ order.total|floatformat:"-2" }} FCFA</strong>
+                </div>
+                <div class="small text-muted">
+                    {% if role == "seller" %}
+                        Acheteur : {{ order.buyer.first_name }} {{ order.buyer.last_name }}
+                    {% else %}
+                        Vendeur : {{ order.product.seller.first_name }} {{ order.product.seller.last_name }}
+                    {% endif %}
+                </div>
+            </div>
+            <span class="badge {% if order.status == 'completed' %}bg-success{% elif order.status == 'cancelled' %}bg-secondary{% else %}bg-warning text-dark{% endif %}">
+                {{ order.get_status_display }}
+            </span>
+        </div>
+
+        <div class="small mt-2 text-muted">
+            Vendeur : {% if order.seller_confirmed %}✔ a confirmé{% else %}en attente{% endif %}
+            · Acheteur : {% if order.buyer_confirmed %}✔ a confirmé{% else %}en attente{% endif %}
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            {% if order.status != "cancelled" %}
+                {% if role == "seller" %}
+                    <a class="btn btn-success btn-sm" href="{{ order.contact_buyer_link }}" target="_blank" rel="noopener">Contacter l'acheteur</a>
+                {% else %}
+                    <a class="btn btn-success btn-sm" href="{{ order.contact_seller_link }}" target="_blank" rel="noopener">Contacter le vendeur</a>
+                {% endif %}
+            {% endif %}
+
+            {% if order.status == "pending" %}
+                {% if role == "seller" and not order.seller_confirmed %}
+                    <form method="post" action="{% url 'seller_status_confirm' order.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-primary btn-sm" type="submit">Confirmer (commande remise)</button>
+                    </form>
+                {% elif role == "buyer" and not order.buyer_confirmed %}
+                    <form method="post" action="{% url 'buyer_status_confirm' order.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-primary btn-sm" type="submit">Confirmer la réception</button>
+                    </form>
+                {% endif %}
+
+                {% if order.can_cancel %}
+                    <form method="post" action="{% url 'cancel_order' order.id %}"
+                          onsubmit="return confirm('Annuler cette commande ?');">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-danger btn-sm" type="submit">Annuler</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+

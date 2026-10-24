@@ -1,272 +1,66 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard — Marketplace</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
-    
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="{% static 'accounts/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> 
-    <link rel="stylesheet" href="{% static 'accounts/dashboard.css' %}">
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}Mon espace{% endblock %}
 
-    <!-- NAVIGATION -->
-    <div class="container py-4">
-        <nav class="top-nav">
-            <a href="{% url 'product_list' %}" class="brand">
-                <div class="logo">
-                    <img src="{% static 'images/logo.jpg' %}" alt="logo">
-                </div>
-                <span class="brand-text">Marketplace</span>
-            </a>
+{% block content %}
+<h1 class="h3 mb-1">Bonjour {{ user.first_name }}</h1>
+<p class="text-muted mb-4">{{ user.whatsapp_number }}</p>
 
-            <button class="nav-toggle-btn" aria-label="Menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </nav>
-        <div class="menu">
-            <button class="nav-toggle-btn" aria-label="Menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </div>
-      <br><br><br>
-        <div class="dashboard-wrapper">
-
-            <!-- HEADER -->
-            <header class="dashboard-header reveal">
-                <div class="welcome-container">
-                    <h1 class="welcome-title">
-                        De retour, <span class="username-highlight">{{ user.username }}</span>
-                    </h1>
-                    <p class="welcome-subtitle">
-                        <em>Voici l'état actuel de votre activité en temps réel.</em>
-                    </p>
-                </div>
-            </header>
-
-            <!-- STATISTIQUES -->
-            <div class="row bod g-4 justify-content-between">
-               <div class="col-12 col-md-6 col-lg-3">
-                <div class="tools">
-                    <div class="icon-box"><i class="fa-solid fa-bullhorn"></i></div>
-                    <span class="stat-label">Mes annonces</span>
-                    <strong class="stat-value" data-counter="{{ products|length }}">0</strong>
-                </div>
-               </div>
-               <div class="col-12 col-md-6 col-lg-3">
-                <div class="tools">
-                    <div class="icon-box"><i class="fa-solid fa-bag-shopping"></i></div>
-                    <span class="stat-label">Mes achats</span>
-                    <strong class="stat-value" data-counter="{{ boughts|length }}">0</strong>
-                </div>
-               </div>
-               <div class="col-12 col-md-6 col-lg-3">
-                <div class="tools">
-                    <div class="icon-box"><i class="fa-solid fa-inbox"></i></div>
-                    <span class="stat-label">Commandes reçues</span>
-                    <strong class="stat-value" data-counter="{{ received_orders|length }}">0</strong>
-                </div>
-               </div>
-               <div class="col-12 col-md-6 col-lg-3">
-                <div class="tools">
-                    <div class="icon-box"><i class="fa-solid fa-sack-dollar"></i></div>
-                    <span class="stat-label">Mes ventes</span>
-                    <strong class="stat-value" data-counter="{{ sales|length }}">0</strong>
-                </div>
-               </div>
-            </div>
-
-            <!-- MES PRODUITS -->
-            <section class="dashboard-section reveal">
-                <div class="section-heading">
-                    <span class="title">Mes produits</span>
-                </div>
-                <div class="items">
-                    {% for product in products %}
-                        <article class="item">
-                            <div class="item-main">
-                                <span class="name">{{ product.name }}</span>
-                                <p class="item-meta">
-                                    <span class="price-tag">{{ product.price }} FCFA</span>
-                                    <span class="separator">·</span>
-                                    <span class="stock-tag">{{ product.quantity }} disponible(s)</span>
-                                </p>
-                            </div>
-                            <div class="item-actions">
-                                <a class="btn btn-action btn-view" href="{% url 'product_detail' product.id %}">
-                                    <i class="fa-solid fa-eye"></i> Voir
-                                </a>
-                                <a class="btn btn-action btn-edit" href="{% url 'product_update' product.id %}">
-                                    <i class="fa-solid fa-pen"></i> Modifier
-                                </a>
-                                <a class="btn btn-action btn-danger" href="{% url 'product_delete' product.id %}">
-                                    <i class="fa-solid fa-trash"></i> Supprimer
-                                </a>
-                            </div>
-                        </article>
-                    {% empty %}
-                        <div class="empty">
-                            <i class="fa-solid fa-folder-open fa-2x mb-2"></i>
-                            <p>Vous n'avez publié aucune annonce.</p>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- MES COMMANDES -->
-            <section class="dashboard-section reveal">
-                <div class="section-heading">
-                    <span class="title">Mes Commandes</span>
-                </div>
-                <div class="items">
-                    {% for order in purchases %}
-                        <article class="item">
-                            <div class="item-main">
-                                <span class="name">{{ order.product.name }}</span>
-                                <p class="item-meta">
-                                    Quantité : <strong>{{ order.quantity }}</strong> · {{ order.unit_price }} FCFA
-                                </p>
-                                <p class="status-wrapper">
-                                    Statut :
-                                    <span class="status {% if order.status == 'pending' %}status-pending{% elif order.status == 'completed' %}status-completed{% else %}status-cancelled{% endif %}">
-                                        {{ order.get_status_display }}
-                                    </span>
-                                </p>
-                            </div>
-                            
-                            <div class="item-actions">
-                                {% if order.status == "pending" and not order.seller_status %}
-                                    <form method="post" action="{% url 'cancel_order' order.id %}">
-                                        {% csrf_token %}
-                                        <button class="btn btn-action btn-danger" type="submit">Annuler</button>
-                                    </form>
-                                {% endif %}
-                                
-                                {% if request.user == order.buyer and order.status == "pending" and not order.buyer_status %}
-                                    <form method="post" action="{% url 'buyer_status_confirm' order.id %}">
-                                        {% csrf_token %}
-                                        <button class="btn btn-action btn-success" type="submit">
-                                            <i class="fa-solid fa-check"></i> Je confirme avoir reçu ma commande
-                                        </button>
-                                    </form>
-                                {% endif %}
-                            </div>
-                        </article>
-                    {% empty %}
-                       <div class="empty">
-                            <i class="fa-solid fa-calendar fa-2x mb-2"></i>
-                            <p>Vous n'avez aucune commande.</p>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- COMMANDES REÇUES -->
-            <section class="dashboard-section reveal">
-                <div class="section-heading">
-                    <span class="title">Vos commandes à traiter</span>   
-                </div>
-                <div class="items">
-                    {% for order in received_orders %}
-                        <article class="item">
-                            <div class="item-main">
-                                <span class="name">{{ order.product.name }}</span>
-                                <p class="item-meta">Acheteur : <strong>{{ order.buyer.username }}</strong></p>
-                                <p class="item-meta">Quantité : {{ order.quantity }} · {{ order.unit_price }} FCFA</p>
-                                <p class="status-wrapper">
-                                    Statut :
-                                    <span class="status {% if order.status == 'pending' %}status-pending{% elif order.status == 'completed' %}status-completed{% else %}status-cancelled{% endif %}">
-                                        {{ order.get_status_display }}
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="item-actions">
-                                {% if request.user == order.product.seller and order.status == "pending" and not order.seller_status %}
-                                    <form method="post" action="{% url 'seller_status_confirm' order.id %}">
-                                        {% csrf_token %}
-                                        <button class="btn btn-action btn-primary" type="submit">
-                                            Je confirme avoir délivré la commande
-                                        </button>
-                                    </form>
-                                {% endif %}
-                            </div>
-                        </article>
-                    {% empty %}
-                       <div class="empty">
-                            <i class="fa-solid fa-box-open fa-2x mb-2"></i>
-                            <p>Aucune commande reçue pour le moment.</p>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- MES VENTES -->
-            <section class="dashboard-section reveal">
-                <div class="section-heading">
-                    <span class="title">Mes ventes</span>
-                </div>
-                <div class="items">
-                    {% for sale in sales %}
-                        <article class="item">
-                            <div class="item-main">
-                                <span class="name">{{ sale.product.name }}</span>
-                                <p class="item-meta">Acheteur : <strong>{{ sale.buyer.username }}</strong></p>
-                                <p class="item-meta">Quantité : {{ sale.quantity }} · {{ sale.unit_price }} FCFA</p>
-                                <p class="status-wrapper">
-                                    Statut :
-                                    <span class="status {% if sale.status == 'pending' %}status-pending{% elif sale.status == 'completed' %}status-confirmed{% else %}status-cancelled{% endif %}">
-                                        {{ sale.get_status_display }}
-                                    </span>
-                                </p>
-                            </div>
-                        </article>
-                    {% empty %}
-                        <div class="empty">
-                            <i class="fa-solid fa-chart-line fa-2x mb-2"></i>
-                            <p>Vous n'avez encore réalisé aucune vente.</p>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- ACHATS -->
-            <section class="dashboard-section reveal">
-                <div class="section-heading">
-                    <span class="title">Mes Achats</span>
-                </div>
-                <div class="items">
-                    {% for order in boughts %}
-                        <article class="item">
-                            <div class="item-main">
-                                <span class="name">{{ order.product.name }}</span>
-                                <p class="item-meta">Vendeur : <strong>{{ order.product.seller }}</strong></p>
-                                <p class="item-meta">Quantité : {{ order.quantity }} · {{ order.unit_price }} FCFA</p>
-                                <p class="status-wrapper">
-                                    Statut : <span class="status status-pending">{{ order.status }}</span>
-                                </p>
-                            </div>
-                        </article>
-                    {% empty %}
-                       <div class="empty">
-                            <i class="fa-solid fa-basket-shopping fa-2x mb-2"></i>
-                            <p>Vous n'avez encore rien acheté.</p>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-        </div>
+<section class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0">Mes annonces ({{ products|length }})</h2>
+        <a class="btn btn-primary btn-sm" href="{% url 'product_create' %}">Publier un produit</a>
     </div>
+    <div class="list-group shadow-sm">
+        {% for product in products %}
+            <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <a class="fw-semibold text-decoration-none" href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+                    <div class="small text-muted">
+                        {{ product.price|floatformat:"-2" }} FCFA · {{ product.quantity }} en stock
+                    </div>
+                </div>
+                <a class="btn btn-outline-primary btn-sm" href="{% url 'product_update' product.id %}">Modifier</a>
+            </div>
+        {% empty %}
+            <div class="list-group-item text-muted">Vous n'avez aucune annonce en ligne.</div>
+        {% endfor %}
+    </div>
+</section>
 
-    <script src="{% static 'accounts/dashboard.js' %}"></script>
-</body>
-</html>
+<section class="mb-5">
+    <h2 class="h5 mb-3">Commandes reçues à traiter</h2>
+    {% for order in received_orders %}
+        {% include "orders/_order_item.html" with order=order role="seller" %}
+    {% empty %}
+        <p class="text-muted">Aucune commande en attente.</p>
+    {% endfor %}
+</section>
+
+<section class="mb-5">
+    <h2 class="h5 mb-3">Mes achats en cours</h2>
+    {% for order in purchases %}
+        {% include "orders/_order_item.html" with order=order role="buyer" %}
+    {% empty %}
+        <p class="text-muted">Aucun achat en cours.</p>
+    {% endfor %}
+</section>
+
+<section class="mb-5">
+    <h2 class="h5 mb-3">Mes ventes terminées</h2>
+    {% for order in sales %}
+        {% include "orders/_order_item.html" with order=order role="seller" %}
+    {% empty %}
+        <p class="text-muted">Aucune vente terminée.</p>
+    {% endfor %}
+</section>
+
+<section class="mb-5">
+    <h2 class="h5 mb-3">Mes achats terminés</h2>
+    {% for order in boughts %}
+        {% include "orders/_order_item.html" with order=order role="buyer" %}
+    {% empty %}
+        <p class="text-muted">Aucun achat terminé.</p>
+    {% endfor %}
+</section>
+{% endblock %}

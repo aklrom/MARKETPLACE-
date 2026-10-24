@@ -1,0 +1,15 @@
+.card h1 {
+    font-weight: 600;
+}
+
+.card .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
+}
+
+.card a {
+    text-decoration: none;
+}
+
+.card a:hover {
+    text-decoration: underline;
+}

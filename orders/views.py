@@ -1,84 +1,42 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404,redirect,render
-from django.http import HttpResponseForbidden
-from products.models import Product
-from .models import Order
-from django.db import transaction
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpResponseForbidden
+from django.shortcuts import redirect, render
+from django.views.decorators.http import require_POST
 
+from .models import Order
 
 
 @login_required
 def order_list(request):
-    orders=Order.objects.filter(buyer=request.user)
-    if not orders:
-        orders="Aucune commande effectuées"
-    return render(request,"orders/orders.html",{"orders":orders})
+    orders = Order.objects.filter(buyer=request.user).select_related("product__seller")
+    return render(request, "orders/orders.html", {"orders": orders})
 
 
-@login_required
-def cancel_order(request,id):
-    if request.method != "POST":
-        return HttpResponseForbidden("Méthode non autorisée.")
-
-    with transaction.atomic():
-        order=get_object_or_404(Order,id=id)
-        product=order.product
-
-        if request.user not in [product.seller,order.buyer] or order.status!="pending":
-            return HttpResponseForbidden(
-                        "Vous n'avez pas le droit de gérer cette commande."
-                    )
-        if order.seller_status :
-            return HttpResponseForbidden("Cette commande a déja été validée. Impossible de l'annuler.")
-        order.status="cancelled"
-        
-        product.quantity+=order.quantity
-        order.save()
-        product.save()
-
-    return redirect("dashboard")    
-
-@login_required
-def seller_status_confirm(request,id):
-    
-    if request.method!="POST":
-        return HttpResponseForbidden("Mauvaise methode")
-    order=get_object_or_404(Order,id=id)
-    if order.status!="pending":
-        return HttpResponseForbidden(
-        "Cette commande ne peut pas encore être validée."
-    )
-    if request.user!=order.product.seller or order.seller_status:
-        return HttpResponseForbidden("Vous n'etes pas autorisé à agir  ou  vous avez deja validé")
-    with transaction.atomic():
-        order.seller_status=True
-        if order.seller_status and order.buyer_status:
-            order.status="completed"
-            
-        order.save()
+def _run_action(action, order_id, user):
+    """Exécute une action sur une commande et traduit les erreurs en réponses HTTP."""
+    try:
+        action(order_id, user)
+    except Order.DoesNotExist:
+        raise Http404("Commande introuvable.")
+    except PermissionDenied as exc:
+        return HttpResponseForbidden(str(exc))
     return redirect("dashboard")
 
+
 @login_required
-def buyer_status_confirm(request,id):
-    if request.method!="POST":
-        return HttpResponseForbidden("Mauvaise methode")
-    order=get_object_or_404(Order,id=id)
-    if  order.status!="pending":
-        return HttpResponseForbidden(
-        "Cette commande ne peut pas encore être validée."
-    )
-    if request.user!=order.buyer or order.buyer_status:
-        return HttpResponseForbidden("Vous n'etes pas autorisé à agir ou vous avez deja confirmé")
-    with transaction.atomic():
-        order.buyer_status = True
-        if order.seller_status and order.buyer_status:
-            order.status = "completed"
-            
-        order.save()
-
-    return redirect("dashboard")
-
-    
+@require_POST
+def cancel_order(request, id):
+    return _run_action(Order.cancel_by, id, request.user)
 
 
-# Create your views here.
+@login_required
+@require_POST
+def seller_status_confirm(request, id):
+    return _run_action(Order.confirm_as_seller, id, request.user)
+
+
+@login_required
+@require_POST
+def buyer_status_confirm(request, id):
+    return _run_action(Order.confirm_as_buyer, id, request.user)

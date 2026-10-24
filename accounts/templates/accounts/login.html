@@ -1,17 +1,57 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
+    <link rel="stylesheet" href="{% static 'accounts/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/login.css' %}">
 </head>
-<body>
-    <h1>Se connecter</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p}}
 
-        <button type="submit">Se connecter</button>
-    </form>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-8 col-md-5 col-lg-4">
+
+                <div class="card shadow border-0 p-4">
+
+                    <h1 class="text-center h3 mb-4">Se connecter</h1>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger py-2 fs-7" role="alert">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label class="form-label" id="username_label" for="id_username">Numéro WhatsApp</label>
+                            <input aria-labelledby="username_label" type="tel" name="username" id="id_username"
+                                   class="form-control" placeholder="+22997000000"
+                                   value="{{ form.username.value|default:'' }}" required autofocus>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" id="password_label" for="id_password">Mot de passe</label>
+                            <input aria-labelledby="password_label" type="password" name="password" id="id_password"
+                                   class="form-control" required>
+                        </div>
+
+                        <button class="btn btn-primary w-100" type="submit">Se connecter</button>
+                    </form>
+
+                    <p class="text-center small mt-3 mb-0">
+                        Pas encore de compte ?
+                        <a href="{% url 'register' %}">Créer un compte</a>
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
 </body>
 </html>

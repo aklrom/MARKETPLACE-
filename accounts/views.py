@@ -1,47 +1,77 @@
-from django.shortcuts import redirect,render
-from .forms import RegisterForm
-from django.contrib.auth import login
-from django.contrib.auth import logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
-from products.models import Product
+from django.shortcuts import redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
+
 from orders.models import Order
+from products.models import Product
+
+from .forms import LoginForm, RegisterForm
+
 
 def register(request):
-    if request.method=="POST":
-        form=RegisterForm(request.POST)
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("login")
-
     else:
-        form=RegisterForm()    
-    return render(request,"accounts/register.html",{"form":form})
+        form = RegisterForm()
+    return render(request, "accounts/register.html", {"form": form})
+
+
+def _safe_next_url(request):
+    """Renvoie l'URL "next" seulement si elle pointe vers ce site (anti open-redirect)."""
+    next_url = request.POST.get("next") or request.GET.get("next")
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return next_url
+    return None
+
 
 def login_view(request):
-    if request.method=="POST":
-        form=AuthenticationForm(request,data=request.POST)
+    if request.method == "POST":
+        form = LoginForm(request, data=request.POST)
         if form.is_valid():
-            user=form.get_user()
-            login(request,user)
-            return redirect("dashboard")
-
+            login(request, form.get_user())
+            return redirect(_safe_next_url(request) or "dashboard")
     else:
-        form=AuthenticationForm()
+        form = LoginForm()
+    return render(request, "accounts/login.html", {"form": form})
 
-    return render(request,"accounts/login.html",{"form":form})     
 
 @login_required
 def dashboard(request):
-    products=Product.objects.filter(seller=request.user,is_active=True) # annoncees
-    purchases=Order.objects.filter(buyer=request.user,status="pending")# les commandes que j'ai faite
-    received_orders=Order.objects.filter(product__seller=request.user,status="pending")# les commandes que j'ai reçu
-    sales=Order.objects.filter(product__seller=request.user , status="completed")#mes ventes completées
-    boughts=Order.objects.filter(buyer=request.user,status="completed")# mes achats
-    return render(request,"accounts/dashboard.html",{"products":products,"boughts":boughts,"received_orders":received_orders,"purchases":purchases,"sales":sales}) 
+    user = request.user
+    orders = Order.objects.select_related("product__seller", "buyer")
+
+    # Mes annonces en ligne
+    products = Product.objects.filter(seller=user, is_active=True).select_related("category")
+    # Les commandes que j'ai faites (en attente)
+    purchases = orders.filter(buyer=user, status=Order.Status.PENDING)
+    # Les commandes que j'ai reçues (en attente)
+    received_orders = orders.filter(product__seller=user, status=Order.Status.PENDING)
+    # Mes ventes terminées
+    sales = orders.filter(product__seller=user, status=Order.Status.COMPLETED)
+    # Mes achats terminés
+    boughts = orders.filter(buyer=user, status=Order.Status.COMPLETED)
+
+    return render(
+        request,
+        "accounts/dashboard.html",
+        {
+            "products": products,
+            "boughts": boughts,
+            "received_orders": received_orders,
+            "purchases": purchases,
+            "sales": sales,
+        },
+    )
 
 
 def logout_view(request):
     logout(request)
     return redirect("login")
-# Create your views here.

@@ -33,43 +33,61 @@
                             </div>
                         {% endif %}
 
-                        <div class="mb-3"><label class="form-label" id="user_label" for="id_username">Nom d'utilisateur:</label><input aria-labelledby="user_label" id ="id_username" type="text" name="username" class="form-control"></div>
-                        {% if form.username.errors %}
-                            <div class="text-danger small mt-1">
-                                {{ form.username.errors }}
-                            </div>
-                        {% endif %}
-                        <div class="mb-3"><label class="form-label" id="email_label" for="id_email">Email</label><input aria-labelledby="email_label" type="email" name="email" id="id_email" class="form-control"></div>
-                        {% if form.email.errors %}
-                            <div class="text-danger small mt-1">
-                                {{ form.email.errors }}
-                            </div>
-                        {% endif %}
-                        <div class="mb-3"><label class="form-label" id="phone_label" for="id_phone">Num° Whatsapp </label><input aria-labelledby="phone_label" type="tel" name="phone" id="id_phone" class="form-control"></div>
-                        {% if form.phone_number.errors %}
-                            <div class="text-danger small mt-1">
-                                {{ form.phone_number.errors }}
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label" id="last_name_label" for="id_last_name">Nom</label>
+                            <input aria-labelledby="last_name_label" type="text" name="last_name" id="id_last_name"
+                                class="form-control" value="{{ form.last_name.value|default:'' }}" required>
+                        </div>
+                        {% if form.last_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.last_name.errors }}</div>
                         {% endif %}
 
-                        <div class="mb-3"><label class="form-label"  id="password1_label" for="id_password1">Mot de passe</label><input aria-labelledby="password1_label" type="password" name="password1" id="id_password1" class="form-control" ></div>
-                        
+                        <div class="mb-3">
+                            <label class="form-label" id="first_name_label" for="id_first_name">Prénom</label>
+                            <input aria-labelledby="first_name_label" type="text" name="first_name" id="id_first_name"
+                                class="form-control" value="{{ form.first_name.value|default:'' }}" required>
+                        </div>
+                        {% if form.first_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.first_name.errors }}</div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label class="form-label" id="whatsapp_label" for="id_whatsapp_number">Numéro WhatsApp</label>
+                            <input aria-labelledby="whatsapp_label" type="tel" name="whatsapp_number" id="id_whatsapp_number"
+                                class="form-control" placeholder="+22997000000"
+                                value="{{ form.whatsapp_number.value|default:'' }}" required>
+                        </div>
+                        {% if form.whatsapp_number.errors %}
+                            <div class="text-danger small mt-1">{{ form.whatsapp_number.errors }}</div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label class="form-label" id="password1_label" for="id_password1">Mot de passe</label>
+                            <input aria-labelledby="password1_label" type="password" name="password1" id="id_password1"
+                                class="form-control" required>
+                        </div>
+                        {% if form.password1.errors %}
+                            <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
+                        {% endif %}
 
                         <div id="password-guidelines" style="display:none;">
                             <ul>
-                                <li id="length-check"> Au moins 8 caractères</li>
-                                <li id="capital-check"> Au moins une majuscule</li>
-                                <li id="number-check"> Au moins un chiffre</li>
-                                <li id="match-check"> Différent du nom d'utilisateur</li>
+                                <li id="length-check">Au moins 8 caractères</li>
+                                <li id="capital-check">Au moins une majuscule</li>
+                                <li id="number-check">Au moins un chiffre</li>
                             </ul>
                         </div>
-                        <div class="mb-3"><label class="form-label" id="password2_label" for="id_password2">Confirmer le mot de passe</label><input aria-labelledby="password2_label" type="password" name="password2" id="id_password2" class="form-control"></div>
+
+                        <div class="mb-3">
+                            <label class="form-label" id="password2_label" for="id_password2">Confirmer le mot de passe</label>
+                            <input aria-labelledby="password2_label" type="password" name="password2" id="id_password2"
+                                class="form-control" required>
+                        </div>
                         {% if form.password2.errors %}
-                            <div class="text-danger small mt-1">
-                                {{ form.password2.errors }}
-                            </div>
+                            <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
                         {% endif %}
-                        <button  class="btn btn-primary w-100" type="submit">Créer mon compte</button>
+
+                        <button class="btn btn-primary w-100" type="submit">Créer mon compte</button>
                     </form>
                 
                 </div>

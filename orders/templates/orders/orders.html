@@ -1,25 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders list</title>
-</head>
-<body>
-    <h1>Mes commandes </h1>
-    {% for order in orders %}
-        <br>
-        <article>
-            <h3>{{order.product.name}}</h3>
-            <p>{{order.quantity}}</p>
-            <p>{{order.unit_price}}</p>
-            <p>{{order.status}}</p>
-            <p>{{order.created_at}}</p>
-        </article> 
+{% extends "base.html" %}
 
-    {% empty %}    
-        <p>Aucube commande effectuée.</p>
-    {% endfor %}    
+{% block title %}Mes commandes{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<h1 class="h3 mb-4">Mes commandes</h1>
+
+{% for order in orders %}
+    {% include "orders/_order_item.html" with order=order role="buyer" %}
+{% empty %}
+    <p class="text-muted">Aucune commande effectuée.</p>
+{% endfor %}
+{% endblock %}

@@ -1,17 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete {{ product.name}}</title>
-</head>
-<body>
-    
-    <form  method="post">
-        {% csrf_token %}
-        <p>Supprimer {{product.name}}</p>
-        <button type="submit">retirer du catalogue</button>
-    </form>
-    <a href="{% url 'product_list' %}">Retourner à la liste des produits</a>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Retirer de la vente{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-6">
+        <div class="card shadow border-0 p-4">
+            <h1 class="h4 mb-3">Retirer « {{ product.name }} » de la vente ?</h1>
+            <p class="text-muted">
+                L'annonce ne sera plus visible par les acheteurs. Les commandes déjà passées ne sont pas affectées.
+                Vous pourrez la remettre en vente en la modifiant.
+            </p>
+            <form method="post" class="d-flex gap-2">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Oui, retirer</button>
+                <a class="btn btn-outline-secondary" href="{% url 'product_detail' product.id %}">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
