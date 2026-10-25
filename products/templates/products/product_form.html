@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}.
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
@@ -38,4 +38,8 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'products/product_form.js' %}" defer></script>
 {% endblock %}

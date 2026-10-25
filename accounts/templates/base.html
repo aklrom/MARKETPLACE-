@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Marketplace{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'accounts/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/site.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-light">
 
     <nav class="navbar navbar-expand bg-white border-bottom shadow-sm">
         <div class="container flex-wrap">
-            <a class="navbar-brand fw-bold" href="{% url 'product_list' %}">Marketplace</a>
+            <a class="navbar-brand" href="{% url 'product_list' %}">Marketplace</a>
             <ul class="navbar-nav ms-auto flex-row flex-wrap gap-3 align-items-center">
                 {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'product_create' %}">Vendre</a></li>
@@ -30,7 +31,7 @@
 
     <main class="container my-4">
         {% for message in messages %}
-            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} py-2" role="alert">
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} py-2" role="alert"{% if message.tags != 'error' %} data-autohide{% endif %}>
                 {{ message }}
             </div>
         {% endfor %}
@@ -38,5 +39,11 @@
         {% block content %}{% endblock %}
     </main>
 
+    <footer class="site-footer text-center text-muted small py-3 border-top bg-white">
+        Marketplace · Acheteurs et vendeurs échangent directement sur WhatsApp
+    </footer>
+
+    <script src="{% static 'accounts/site.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

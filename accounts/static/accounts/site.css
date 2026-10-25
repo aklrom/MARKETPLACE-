@@ -1,0 +1,153 @@
+/* ============================================================
+   site.css : styles communs aux pages qui héritent de base.html
+   Bootstrap fournit la base ; ici on ajoute les détails.
+   ============================================================ */
+
+:root {
+    --site-radius: 0.6rem;
+    --whatsapp: #25d366;
+    --whatsapp-dark: #1ebe5b;
+}
+
+/* Pied de page toujours en bas, même sur les pages courtes */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+    width: 100%;
+}
+
+.site-footer {
+    margin-top: auto;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.navbar .nav-link {
+    font-weight: 500;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus-visible {
+    color: var(--bs-primary, #0d6efd);
+}
+
+/* Liste des produits : la carte se soulève au survol */
+.product-card {
+    border-radius: var(--site-radius);
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Page produit : photo contenue, quelle que soit sa forme */
+.product-photo {
+    width: 100%;
+    max-height: 480px;
+    object-fit: contain;
+    background-color: #fff;
+}
+
+/* Formulaire produit : aperçu de la photo choisie */
+.image-preview {
+    display: block;
+    max-width: 100%;
+    max-height: 220px;
+    margin-top: 0.75rem;
+    border-radius: var(--site-radius);
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+
+.image-preview[hidden] {
+    display: none;
+}
+
+/* Panier : formulaires + / − / Retirer alignés dans le tableau */
+.table td form {
+    display: inline-block;
+    margin: 0;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.04);
+}
+
+.table .btn-sm {
+    min-width: 2rem;
+}
+
+/* Commandes : bande de couleur selon le statut */
+.order-card {
+    border-left: 4px solid #dee2e6 !important;
+}
+
+.order-pending {
+    border-left-color: #ffc107 !important;
+}
+
+.order-completed {
+    border-left-color: #198754 !important;
+}
+
+.order-cancelled {
+    border-left-color: #adb5bd !important;
+    opacity: 0.8;
+}
+
+/* Dashboard : titres de sections */
+main section h2 {
+    border-left: 4px solid var(--bs-primary, #0d6efd);
+    padding-left: 0.6rem;
+}
+
+/* Boutons « Contacter sur WhatsApp » : vert WhatsApp, texte foncé lisible */
+a.btn[href^="https://wa.me/"] {
+    background-color: var(--whatsapp);
+    border-color: var(--whatsapp);
+    color: #06361a;
+    font-weight: 600;
+}
+
+a.btn[href^="https://wa.me/"]:hover,
+a.btn[href^="https://wa.me/"]:focus-visible {
+    background-color: var(--whatsapp-dark);
+    border-color: var(--whatsapp-dark);
+    color: #06361a;
+}
+
+/* Boutons en cours d'envoi (voir site.js) */
+.btn[aria-busy="true"] {
+    cursor: progress;
+}
+
+/* Messages : disparition en fondu */
+.alert[data-autohide] {
+    transition: opacity 0.4s ease;
+}
+
+.alert.is-hiding {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .product-card,
+    .alert[data-autohide] {
+        transition: none;
+    }
+
+    .product-card:hover {
+        transform: none;
+    }
+}

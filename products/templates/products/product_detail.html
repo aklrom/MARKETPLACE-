@@ -6,7 +6,7 @@
 <div class="row g-4">
     <div class="col-md-6">
         {% if product.image %}
-            <img src="{{ product.image.url }}" class="img-fluid rounded shadow-sm" alt="{{ product.name }}">
+            <img src="{{ product.image.url }}" class="img-fluid rounded shadow-sm product-photo"" alt="{{ product.name }}">
         {% else %}
             <div class="bg-secondary bg-opacity-25 text-muted rounded d-flex align-items-center justify-content-center"
                  style="height:300px;">Pas de photo</div>

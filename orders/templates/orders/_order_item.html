@@ -1,6 +1,6 @@
 
 
-<div class="card border-0 shadow-sm mb-3">
+<div class="card border-0 shadow-sm mb-3 rder-card order-{{ order.status }}">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
             <div>
@@ -41,12 +41,12 @@
 
             {% if order.status == "pending" %}
                 {% if role == "seller" and not order.seller_confirmed %}
-                    <form method="post" action="{% url 'seller_status_confirm' order.id %}">
+                    <form method="post" action="{% url 'seller_status_confirm' order.id %}" data-confirm="Confirmer que la commande a bien été remise ?">
                         {% csrf_token %}
                         <button class="btn btn-primary btn-sm" type="submit">Confirmer (commande remise)</button>
                     </form>
                 {% elif role == "buyer" and not order.buyer_confirmed %}
-                    <form method="post" action="{% url 'buyer_status_confirm' order.id %}">
+                    <form method="post" action="{% url 'buyer_status_confirm' order.id %}" data-confirm="Confirmer que vous avez bien reçu la commande ?">
                         {% csrf_token %}
                         <button class="btn btn-primary btn-sm" type="submit">Confirmer la réception</button>
                     </form>
@@ -54,7 +54,7 @@
 
                 {% if order.can_cancel %}
                     <form method="post" action="{% url 'cancel_order' order.id %}"
-                          onsubmit="return confirm('Annuler cette commande ?');">
+                          data-confirm="return confirm('Annuler cette commande ?');">
                         {% csrf_token %}
                         <button class="btn btn-outline-danger btn-sm" type="submit">Annuler</button>
                     </form>
