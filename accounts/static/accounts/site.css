@@ -1,16 +1,50 @@
-/* ============================================================
-   site.css : styles communs aux pages qui héritent de base.html
-   Bootstrap fournit la base ; ici on ajoute les détails.
-   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Sofia+Sans+Extra+Condensed:wght@600;800&display=swap");
 
 :root {
-    --site-radius: 0.6rem;
+    --ink: #1b2a5c;            /* indigo : texte, barre de navigation */
+    --ink-deep: #121c40;       /* pied de page */
+    --link: #2a45a0;
+    --muted: #5b6788;
+    --line: #d5daea;
+    --paper: #f6f7fb;
+    --tint: #e6eaf6;
+    --saffron: #ffb400;        /* l'étiquette : prix et actions d'achat */
+    --saffron-hover: #ffc233;
+    --saffron-press: #e8a200;
+    --chili: #c62039;
+    --leaf: #0f7b4b;
     --whatsapp: #25d366;
     --whatsapp-dark: #1ebe5b;
+
+    --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --font-display: "Sofia Sans Extra Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+    --radius: 6px;
+
+    /* Bootstrap suit nos couleurs */
+    --bs-primary: #1b2a5c;
+    --bs-primary-rgb: 27, 42, 92;
+    --bs-body-font-family: var(--font-body);
+    --bs-body-color: #1b2a5c;
+    --bs-body-bg: #f6f7fb;
+    --bs-link-color: #2a45a0;
+    --bs-link-color-rgb: 42, 69, 160;
+    --bs-link-hover-color: #1b2a5c;
+    --bs-link-hover-color-rgb: 27, 42, 92;
+    --bs-border-color: #d5daea;
 }
 
-/* Pied de page toujours en bas, même sur les pages courtes */
+/* ---------- Base ---------- */
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--ink);
+    background-color: var(--paper);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -21,103 +55,296 @@ main {
     width: 100%;
 }
 
+a {
+    color: var(--link);
+}
+
+a:hover {
+    color: var(--ink);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+}
+
+.h3 { font-size: 2rem; }
+.h4 { font-size: 1.7rem; }
+.h5 { font-size: 1.5rem; }
+.h6 { font-size: 1.2rem; }
+
+.text-muted,
+.form-text {
+    color: var(--muted) !important;
+}
+
+:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+}
+
+.skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    z-index: 100;
+    padding: 0.5rem 1rem;
+    background: var(--saffron);
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.skip-link:focus {
+    left: 0;
+}
+
+/* ---------- Navigation ---------- */
+.site-nav {
+    background: var(--ink);
+    color: #fff;
+    border-bottom: 4px solid var(--saffron);
+}
+
+.site-nav__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.35rem 1.5rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+}
+
+.site-nav :focus-visible {
+    outline-color: #fff;
+}
+
+.brand {
+    --hole: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.9rem;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: #fff;
+    text-decoration: none;
+}
+
+.brand:hover {
+    color: #fff;
+}
+
+.brand--on-light {
+    --hole: var(--paper);
+    color: var(--ink);
+}
+
+.brand--on-light:hover {
+    color: var(--ink);
+}
+
+/* Le logo : une petite étiquette percée */
+.brand__tag {
+    flex: none;
+    width: 1.5rem;
+    height: 1.1rem;
+    background:
+        radial-gradient(circle at 0.7rem 50%, var(--hole) 0 0.15rem, transparent 0.16rem),
+        var(--saffron);
+    clip-path: polygon(0.55rem 0, 100% 0, 100% 100%, 0.55rem 100%, 0 50%);
+    transform: rotate(-10deg);
+    transition: transform 0.45s cubic-bezier(0.3, 1.9, 0.5, 1);
+}
+
+.brand:hover .brand__tag,
+.brand:focus-visible .brand__tag {
+    transform: rotate(10deg);
+}
+
+.site-nav__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.15rem 1.15rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.site-nav__link {
+    position: relative;
+    padding: 0.3rem 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.86);
+    text-decoration: none;
+}
+
+.site-nav__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--saffron);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+}
+
+.site-nav__link:hover,
+.site-nav__link[aria-current="page"] {
+    color: #fff;
+}
+
+.site-nav__link:hover::after,
+.site-nav__link[aria-current="page"]::after {
+    transform: scaleX(1);
+}
+
+/* ---------- Pied de page ---------- */
 .site-footer {
     margin-top: auto;
+    padding: 1.25rem 0;
+    background: var(--ink-deep);
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.9rem;
 }
 
-/* Navigation */
-.navbar-brand {
+/* ---------- Boutons ---------- */
+.btn {
+    border-radius: var(--radius);
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.15s ease;
 }
 
-.navbar .nav-link {
-    font-weight: 500;
+/* Pas de dégradé hérité d'un thème Bootstrap */
+.btn,
+.btn:hover,
+.btn:focus,
+.btn:active {
+    background-image: none;
 }
 
-.navbar .nav-link:hover,
-.navbar .nav-link:focus-visible {
-    color: var(--bs-primary, #0d6efd);
+.btn-lg {
+    padding: 0.65rem 1.5rem;
+    font-size: 1.15rem;
 }
 
-/* Liste des produits : la carte se soulève au survol */
-.product-card {
-    border-radius: var(--site-radius);
-    overflow: hidden;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+/* Action principale = jaune safran, comme l'étiquette de prix */
+.btn-primary {
+    --bs-btn-color: #1b2a5c;
+    --bs-btn-bg: #ffb400;
+    --bs-btn-border-color: #ffb400;
+    --bs-btn-hover-color: #1b2a5c;
+    --bs-btn-hover-bg: #ffc233;
+    --bs-btn-hover-border-color: #ffc233;
+    --bs-btn-active-color: #1b2a5c;
+    --bs-btn-active-bg: #e8a200;
+    --bs-btn-active-border-color: #e8a200;
+    --bs-btn-active-shadow: 0 1px 0 rgba(27, 42, 92, 0.55);
+    --bs-btn-disabled-color: #1b2a5c;
+    --bs-btn-disabled-bg: #ffb400;
+    --bs-btn-disabled-border-color: #ffb400;
+    --bs-btn-focus-shadow-rgb: 27, 42, 92;
+    color: var(--ink);
+    background-color: var(--saffron);
+    border-color: var(--saffron);
+    box-shadow: 0 3px 0 rgba(27, 42, 92, 0.55);
 }
 
-.product-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.12) !important;
+.btn-primary:hover,
+.btn-primary:focus {
+    color: var(--ink);
+    background-color: var(--saffron-hover);
+    border-color: var(--saffron-hover);
 }
 
-/* Page produit : photo contenue, quelle que soit sa forme */
-.product-photo {
-    width: 100%;
-    max-height: 480px;
-    object-fit: contain;
-    background-color: #fff;
+.btn-primary:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(27, 42, 92, 0.55);
+    background-color: var(--saffron-press);
 }
 
-/* Formulaire produit : aperçu de la photo choisie */
-.image-preview {
-    display: block;
-    max-width: 100%;
-    max-height: 220px;
-    margin-top: 0.75rem;
-    border-radius: var(--site-radius);
-    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
+.btn-primary:disabled,
+.btn-primary.disabled {
+    opacity: 0.6;
+    box-shadow: none;
 }
 
-.image-preview[hidden] {
-    display: none;
+.btn-outline-primary {
+    --bs-btn-color: #1b2a5c;
+    --bs-btn-border-color: #1b2a5c;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #1b2a5c;
+    --bs-btn-hover-border-color: #1b2a5c;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #1b2a5c;
+    --bs-btn-active-border-color: #1b2a5c;
+    --bs-btn-focus-shadow-rgb: 27, 42, 92;
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    background-color: transparent;
 }
 
-/* Panier : formulaires + / − / Retirer alignés dans le tableau */
-.table td form {
-    display: inline-block;
-    margin: 0;
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    color: #fff;
+    background-color: var(--ink);
+    border-color: var(--ink);
 }
 
-.table tbody tr:hover {
-    background-color: rgba(13, 110, 253, 0.04);
+.btn-danger,
+.btn-outline-danger {
+    --bs-btn-color: #c62039;
+    --bs-btn-border-color: #c62039;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #c62039;
+    --bs-btn-hover-border-color: #c62039;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #a8182f;
+    --bs-btn-active-border-color: #a8182f;
 }
 
-.table .btn-sm {
-    min-width: 2rem;
+.btn-danger {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #c62039;
+    color: #fff;
+    background-color: var(--chili);
+    border-color: var(--chili);
 }
 
-/* Commandes : bande de couleur selon le statut */
-.order-card {
-    border-left: 4px solid #dee2e6 !important;
+.btn-outline-danger {
+    color: var(--chili);
+    border-color: var(--chili);
 }
 
-.order-pending {
-    border-left-color: #ffc107 !important;
-}
-
-.order-completed {
-    border-left-color: #198754 !important;
-}
-
-.order-cancelled {
-    border-left-color: #adb5bd !important;
-    opacity: 0.8;
-}
-
-/* Dashboard : titres de sections */
-main section h2 {
-    border-left: 4px solid var(--bs-primary, #0d6efd);
-    padding-left: 0.6rem;
+.btn-outline-danger:hover {
+    color: #fff;
+    background-color: var(--chili);
+    border-color: var(--chili);
 }
 
 /* Boutons « Contacter sur WhatsApp » : vert WhatsApp, texte foncé lisible */
 a.btn[href^="https://wa.me/"] {
+    --bs-btn-bg: #25d366;
+    --bs-btn-border-color: #25d366;
+    --bs-btn-color: #06361a;
+    --bs-btn-hover-bg: #1ebe5b;
+    --bs-btn-hover-border-color: #1ebe5b;
+    --bs-btn-hover-color: #06361a;
     background-color: var(--whatsapp);
     border-color: var(--whatsapp);
     color: #06361a;
-    font-weight: 600;
 }
 
 a.btn[href^="https://wa.me/"]:hover,
@@ -132,8 +359,104 @@ a.btn[href^="https://wa.me/"]:focus-visible {
     cursor: progress;
 }
 
-/* Messages : disparition en fondu */
+/* ---------- Formulaires ---------- */
+.form-label {
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.form-control,
+.form-select {
+    padding: 0.55rem 0.75rem;
+    border: 1.5px solid #b9c1dc;
+    border-radius: var(--radius);
+    background-color: #fff;
+    color: var(--ink);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--ink);
+    background-color: #fff;
+    color: var(--ink);
+    box-shadow: 0 0 0 0.22rem rgba(255, 180, 0, 0.55);
+}
+
+.form-check-input:checked {
+    background-color: var(--ink);
+    border-color: var(--ink);
+}
+
+.form-check-input:focus {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 0.22rem rgba(255, 180, 0, 0.55);
+}
+
+/* ---------- Cartes (formulaires, panier, commandes) ---------- */
+.card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--ink);
+}
+
+/* Cartes de formulaire : un bandeau jaune comme le haut d'une étiquette */
+.card.shadow {
+    border: 1px solid var(--line) !important;
+    border-top: 6px solid var(--saffron) !important;
+    box-shadow: none !important;
+}
+
+.card.shadow-sm {
+    box-shadow: none !important;
+}
+
+/* ---------- Tableaux (panier) ---------- */
+.table {
+    --bs-table-bg: transparent;
+    color: var(--ink);
+}
+
+.table thead th {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.15rem;
+    border-bottom: 2px solid var(--ink);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(255, 180, 0, 0.1);
+}
+
+.table tfoot th {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+}
+
+.table td form {
+    display: inline-block;
+    margin: 0;
+}
+
+.table .btn-sm {
+    min-width: 2rem;
+}
+
+/* ---------- Messages et badges ---------- */
+.alert {
+    border: 0;
+    border-left: 6px solid var(--link);
+    border-radius: var(--radius);
+}
+
+.alert-success { border-left-color: var(--leaf); }
+.alert-danger { border-left-color: var(--chili); }
+.alert-warning { border-left-color: var(--saffron); }
+.alert-info { border-left-color: var(--link); }
+
+/* Un message apparaît quand une action vient d'avoir lieu (ajout au panier...) */
 .alert[data-autohide] {
+    animation: drop-in 0.35s ease-out;
     transition: opacity 0.4s ease;
 }
 
@@ -141,13 +464,372 @@ a.btn[href^="https://wa.me/"]:focus-visible {
     opacity: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .product-card,
-    .alert[data-autohide] {
-        transition: none;
+@keyframes drop-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: none; }
+}
+
+.badge {
+    border-radius: 3px;
+    font-weight: 700;
+}
+
+/* ---------- En-tête de page ---------- */
+main > h1.h3,
+main > h1.h4 {
+    font-size: clamp(2.5rem, 6vw, 3.75rem);
+}
+
+.page-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    margin: 0;
+    font-size: clamp(2.5rem, 6vw, 3.75rem);
+}
+
+.page-sub {
+    margin: 0;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+/* ---------- L'étiquette de prix (élément signature) ---------- */
+/* Toutes les dimensions sont en em : changer font-size change la taille de l'étiquette. */
+.price-tag {
+    --rest: -2deg;
+    position: relative;
+    isolation: isolate;
+    display: inline-block;
+    padding: 0.27em 0.52em 0.25em 1.13em;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.55rem;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--ink);
+    /* liseré blanc (autocollant découpé) : l'étiquette reste lisible sur n'importe quelle photo */
+    filter:
+        drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff)
+        drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff)
+        drop-shadow(0 3px 0 rgba(18, 28, 64, 0.3));
+    transform-origin: 0.42em 50%;
+    transform: rotate(var(--rest));
+    transition: transform 0.55s cubic-bezier(0.3, 1.9, 0.5, 1);
+    animation: tag-hang 1.15s cubic-bezier(0.3, 0.7, 0.4, 1) backwards;
+    animation-delay: calc(min(var(--i, 0), 10) * 70ms + 150ms);
+}
+
+.price-tag::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--saffron);
+    clip-path: polygon(0.62em 0, 100% 0, 100% 100%, 0.62em 100%, 0 50%);
+}
+
+/* le trou de la ficelle */
+.price-tag::after {
+    content: "";
+    position: absolute;
+    left: 0.42em;
+    top: 50%;
+    width: 0.28em;
+    height: 0.28em;
+    margin: -0.14em 0 0 -0.14em;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: inset 0 1px 1px rgba(18, 28, 64, 0.5), 0 0 0 0.07em rgba(18, 28, 64, 0.25);
+}
+
+.price-tag small {
+    margin-left: 0.15em;
+    font-size: 0.55em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.price-tag--lg {
+    font-size: 2.7rem;
+}
+
+/* L'étiquette est accrochée, puis se balance une fois quand on arrive */
+@keyframes tag-hang {
+    from { transform: rotate(calc(var(--rest) + 26deg)); }
+    28% { transform: rotate(calc(var(--rest) - 14deg)); }
+    52% { transform: rotate(calc(var(--rest) + 7deg)); }
+    74% { transform: rotate(calc(var(--rest) - 3deg)); }
+    to { transform: rotate(var(--rest)); }
+}
+
+/* ---------- Liste des produits : des tuiles, sans cadre ---------- */
+.tile {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.tile:hover {
+    color: inherit;
+}
+
+.tile:focus-visible {
+    outline-offset: 6px;
+    border-radius: var(--radius);
+}
+
+.tile__media {
+    position: relative;
+}
+
+.tile__photo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: repeating-linear-gradient(135deg, #e3e8f5 0 12px, #ebeef8 12px 24px);
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.tile__photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tile__condition {
+    position: absolute;
+    top: 0.55rem;
+    left: 0.55rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 3px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.tile__media .price-tag {
+    position: absolute;
+    left: 0.6rem;
+    bottom: -1rem;
+}
+
+.tile__text {
+    padding-top: 1.5rem;
+}
+
+.tile__name {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.tile__category {
+    margin: 0.25rem 0 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.tile:hover .price-tag,
+.tile:focus-visible .price-tag {
+    transform: rotate(calc(var(--rest) * -3.5));
+}
+
+.tile:hover .tile__name {
+    text-decoration: underline;
+    text-decoration-color: var(--saffron);
+    text-decoration-thickness: 0.16em;
+    text-underline-offset: 0.14em;
+}
+
+/* ---------- Page produit ---------- */
+.detail-photo {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+}
+
+.detail-photo img {
+    display: block;
+    width: 100%;
+    max-height: 540px;
+    object-fit: contain;
+}
+
+.detail-photo--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    background: repeating-linear-gradient(135deg, #e3e8f5 0 12px, #ebeef8 12px 24px);
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.detail-title {
+    margin: 0 0 1.2rem;
+    font-size: clamp(2.5rem, 5vw, 3.6rem);
+    overflow-wrap: anywhere;
+}
+
+.detail-price {
+    margin: 0 0 1.5rem;
+    padding-left: 0.25rem;
+}
+
+.facts {
+    margin: 0 0 1.25rem;
+}
+
+.facts > div {
+    display: flex;
+    gap: 1rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px dashed #b9c1dc;
+}
+
+.facts dt {
+    flex: 0 0 6.5rem;
+    font-weight: 400;
+    color: var(--muted);
+}
+
+.facts dd {
+    margin: 0;
+    font-weight: 700;
+}
+
+.detail-text {
+    max-width: 62ch;
+}
+
+/* Tampon « Épuisé » */
+.sold-out {
+    display: inline-block;
+    padding: 0.4rem 0.9rem 0.3rem;
+    border: 3px solid var(--chili);
+    border-radius: 4px;
+    color: var(--chili);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.6rem;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    transform: rotate(-3deg);
+}
+
+/* ---------- États vides ---------- */
+.empty {
+    max-width: 34rem;
+    padding: 1.5rem 0 2.5rem;
+}
+
+.empty__title {
+    margin-bottom: 0.4rem;
+    font-size: 2.2rem;
+}
+
+.empty p {
+    color: var(--muted);
+}
+
+/* ---------- Commandes ---------- */
+.order-card {
+    border: 1px solid var(--line) !important;
+    border-left: 6px solid var(--line) !important;
+}
+
+.order-pending { border-left-color: var(--saffron) !important; }
+.order-completed { border-left-color: var(--leaf) !important; }
+
+.order-cancelled {
+    border-left-color: #adb5bd !important;
+    opacity: 0.8;
+}
+
+/* ---------- Dashboard ---------- */
+main section h2 {
+    display: inline-block;
+    padding-bottom: 0.15rem;
+    border-bottom: 4px solid var(--saffron);
+}
+
+/* ---------- Formulaire produit : aperçu de la photo ---------- */
+.image-preview {
+    display: block;
+    max-width: 100%;
+    max-height: 220px;
+    margin-top: 0.75rem;
+    border-radius: var(--radius);
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+
+.image-preview[hidden] {
+    display: none;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 575.98px) {
+    .price-tag {
+        font-size: 1.3rem;
     }
 
-    .product-card:hover {
-        transform: none;
+    .price-tag--lg {
+        font-size: 2.3rem;
+    }
+
+    .tile__name {
+        font-size: 1.3rem;
+    }
+
+    .brand {
+        font-size: 1.7rem;
+    }
+
+    /* Les liens passent sur une seule ligne que l'on fait défiler du doigt */
+    .site-nav__links {
+        flex-wrap: nowrap;
+        width: 100%;
+        gap: 0 1.1rem;
+        padding-bottom: 0.3rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .site-nav__links::-webkit-scrollbar {
+        display: none;
+    }
+
+    .site-nav__links li {
+        flex: none;
+    }
+}
+
+/* ---------- Mouvement réduit ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .price-tag,
+    .brand__tag,
+    .btn,
+    .site-nav__link::after,
+    .alert[data-autohide] {
+        animation: none !important;
+        transition: none !important;
     }
 }

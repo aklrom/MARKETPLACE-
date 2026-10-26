@@ -4,55 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
+    <meta name="theme-color" content="#1b2a5c">
+    <title>{% block title %}Marketplace{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'accounts/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'accounts/login.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/site.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
-
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-12 col-sm-8 col-md-5 col-lg-4">
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
 
-                <div class="card shadow border-0 p-4">
+    <header class="site-nav">
+        <nav class="container site-nav__inner" aria-label="Navigation principale">
+            <a class="brand" href="{% url 'product_list' %}">
+                <span class="brand__tag" aria-hidden="true"></span>Marketplace
+            </a>
 
-                    <h1 class="text-center h3 mb-4">Se connecter</h1>
+            {% with current=request.resolver_match.url_name %}
+            <ul class="site-nav__links">
+                {% if user.is_authenticated %}
+                    <li><a class="site-nav__link" href="{% url 'product_create' %}"{% if current == 'product_create' %} aria-current="page"{% endif %}>Vendre</a></li>
+                    <li><a class="site-nav__link" href="{% url 'cart' %}"{% if current == 'cart' %} aria-current="page"{% endif %}>Panier</a></li>
+                    <li><a class="site-nav__link" href="{% url 'orders_list' %}"{% if current == 'orders_list' %} aria-current="page"{% endif %}>Mes commandes</a></li>
+                    <li><a class="site-nav__link" href="{% url 'dashboard' %}"{% if current == 'dashboard' %} aria-current="page"{% endif %}>Mon espace</a></li>
+                    <li><a class="site-nav__link" href="{% url 'logout' %}">Déconnexion</a></li>
+                {% else %}
+                    <li><a class="site-nav__link" href="{% url 'login' %}"{% if current == 'login' %} aria-current="page"{% endif %}>Connexion</a></li>
+                    <li><a class="btn btn-primary btn-sm" href="{% url 'register' %}">Créer un compte</a></li>
+                {% endif %}
+            </ul>
+            {% endwith %}
+        </nav>
+    </header>
 
-                    <form method="post">
-                        {% csrf_token %}
-
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger py-2 fs-7" role="alert">
-                                {{ form.non_field_errors }}
-                            </div>
-                        {% endif %}
-
-                        <div class="mb-3">
-                            <label class="form-label" id="username_label" for="id_username">Numéro WhatsApp</label>
-                            <input aria-labelledby="username_label" type="tel" name="username" id="id_username"
-                                   class="form-control" placeholder="+22997000000"
-                                   value="{{ form.username.value|default:'' }}" required autofocus>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label" id="password_label" for="id_password">Mot de passe</label>
-                            <input aria-labelledby="password_label" type="password" name="password" id="id_password"
-                                   class="form-control" required>
-                        </div>
-
-                        <button class="btn btn-primary w-100" type="submit">Se connecter</button>
-                    </form>
-
-                    <p class="text-center small mt-3 mb-0">
-                        Pas encore de compte ?
-                        <a href="{% url 'register' %}">Créer un compte</a>
-                    </p>
-
-                </div>
-
+    <main id="contenu" class="container my-4 my-md-5">
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} py-2" role="alert"{% if message.tags != 'error' %} data-autohide{% endif %}>
+                {{ message }}
             </div>
+        {% endfor %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            Acheteurs et vendeurs échangent directement sur WhatsApp.
         </div>
-    </div>
+    </footer>
+
     <script src="{% static 'accounts/site.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

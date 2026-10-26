@@ -1,34 +1,48 @@
 {% extends "base.html" %}
 
-{% block title %}Produits{% endblock %}
+{% block title %}Produits en vente{% endblock %}
 
 {% block content %}
-<h1 class="h3 mb-4">Produits en vente</h1>
+<header class="page-head">
+    <h1 class="page-title">Produits en vente</h1>
+    {% if products %}
+        <p class="page-sub">{{ products|length }} annonce{{ products|length|pluralize }}</p>
+    {% endif %}
+</header>
 
-<div class="row g-3">
+<div class="row g-4">
     {% for product in products %}
         <div class="col-6 col-md-4 col-lg-3">
-            <div class="card h-100 border-0 shadow-sm">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
-                         style="height:180px;object-fit:cover;">
-                {% else %}
-                    <div class="bg-secondary bg-opacity-25 text-muted d-flex align-items-center justify-content-center"
-                         style="height:180px;">Pas de photo</div>
-                {% endif %}
-                <div class="card-body">
-                    <h2 class="h6 card-title">{{ product.name }}</h2>
-                    <p class="text-muted small mb-1">{{ product.category }} · {{ product.get_condition_display }}</p>
-                    <p class="fw-bold mb-0">{{ product.price|floatformat:"-2" }} FCFA</p>
+            <a class="tile" href="{% url 'product_detail' product.id %}">
+                <div class="tile__media">
+                    <div class="tile__photo">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+                        {% else %}
+                            <span>Pas de photo</span>
+                        {% endif %}
+                    </div>
+                    <span class="tile__condition">{{ product.get_condition_display }}</span>
+                    <span class="price-tag" style="--i: {{ forloop.counter0 }}; --rest: {% cycle '-3deg' '2deg' '-1.5deg' '3deg' %}">{{ product.price|floatformat:"-2g" }}<small>FCFA</small></span>
                 </div>
-                <div class="card-footer bg-white border-0 pt-0">
-                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary btn-sm w-100">Voir</a>
+                <div class="tile__text">
+                    <h2 class="tile__name">{{ product.name }}</h2>
+                    <p class="tile__category">{{ product.category }}</p>
                 </div>
-            </div>
-            <div class="card h-100 border-0 shadow-sm product-card"></div>
+            </a>
         </div>
     {% empty %}
-        <p class="text-muted">Aucun produit pour le moment.</p>
+        <div class="col-12">
+            <div class="empty">
+                <h2 class="empty__title">Aucune annonce pour l'instant</h2>
+                <p>Les produits mis en vente apparaîtront ici. Publiez le premier.</p>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-primary" href="{% url 'product_create' %}">Publier un produit</a>
+                {% else %}
+                    <a class="btn btn-primary" href="{% url 'register' %}">Créer un compte pour vendre</a>
+                {% endif %}
+            </div>
+        </div>
     {% endfor %}
 </div>
 {% endblock %}

@@ -3,46 +3,53 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
-<div class="row g-4">
+<div class="row g-4 g-lg-5 align-items-start">
     <div class="col-md-6">
         {% if product.image %}
-            <img src="{{ product.image.url }}" class="img-fluid rounded shadow-sm product-photo"" alt="{{ product.name }}">
+            <div class="detail-photo">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </div>
         {% else %}
-            <div class="bg-secondary bg-opacity-25 text-muted rounded d-flex align-items-center justify-content-center"
-                 style="height:300px;">Pas de photo</div>
+            <div class="detail-photo detail-photo--empty">Pas de photo</div>
         {% endif %}
     </div>
 
     <div class="col-md-6">
-        <h1 class="h3">{{ product.name }}</h1>
-        <p class="text-muted">{{ product.category }} · {{ product.get_condition_display }}</p>
-        <p class="h4 text-primary">{{ product.price|floatformat:"-2" }} FCFA</p>
+        <h1 class="detail-title">{{ product.name }}</h1>
 
-        <div class="mb-3">{{ product.description|linebreaks }}</div>
-
-        <p class="small text-muted">
-            Vendu par {{ product.seller.first_name }} ·
-            {{ product.quantity }} disponible{{ product.quantity|pluralize }}
+        <p class="detail-price">
+            <span class="price-tag price-tag--lg">{{ product.price|floatformat:"-2g" }}<small>FCFA</small></span>
         </p>
 
+        <dl class="facts">
+            <div><dt>État</dt><dd>{{ product.get_condition_display }}</dd></div>
+            <div><dt>Catégorie</dt><dd>{{ product.category }}</dd></div>
+            <div><dt>Disponible</dt><dd>{{ product.quantity }} exemplaire{{ product.quantity|pluralize }}</dd></div>
+            <div><dt>Vendeur</dt><dd>{{ product.seller.first_name }} {{ product.seller.last_name }}</dd></div>
+        </dl>
+
+        <div class="detail-text mb-4">{{ product.description|linebreaks }}</div>
+
         {% if not product.is_active %}
-            <div class="alert alert-warning py-2">Cet article n'est plus en vente (visible uniquement par vous).</div>
+            <div class="alert alert-warning py-2">Cet article n'est plus en vente. Vous seul pouvez le voir.</div>
         {% endif %}
 
         {% if user == product.seller %}
-            <a class="btn btn-outline-primary" href="{% url 'product_update' product.id %}">Modifier</a>
-            <a class="btn btn-outline-danger" href="{% url 'product_delete' product.id %}">Retirer de la vente</a>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-outline-primary" href="{% url 'product_update' product.id %}">Modifier</a>
+                <a class="btn btn-outline-danger" href="{% url 'product_delete' product.id %}">Retirer de la vente</a>
+            </div>
         {% elif product.in_stock %}
             {% if user.is_authenticated %}
                 <form method="post" action="{% url 'add_to_cart' product.id %}">
                     {% csrf_token %}
-                    <button class="btn btn-primary" type="submit">Ajouter au panier</button>
+                    <button class="btn btn-primary btn-lg" type="submit">Ajouter au panier</button>
                 </form>
             {% else %}
-                <a class="btn btn-primary" href="{% url 'login' %}?next={{ request.path }}">Se connecter pour acheter</a>
+                <a class="btn btn-primary btn-lg" href="{% url 'login' %}?next={{ request.path }}">Se connecter pour acheter</a>
             {% endif %}
         {% else %}
-            <span class="badge text-bg-secondary">Épuisé</span>
+            <span class="sold-out">Épuisé</span>
         {% endif %}
     </div>
 </div>
