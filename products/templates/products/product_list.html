@@ -1,18 +1,35 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Produits en vente{% endblock %}
 
 {% block content %}
 <header class="page-head">
     <h1 class="page-title">Produits en vente</h1>
+
     {% if products %}
-        <p class="page-sub">{{ products|length }} annonce{{ products|length|pluralize }}</p>
+        <p class="page-sub" id="result-count" aria-live="polite">{{ products|length }} annonce{{ products|length|pluralize }}</p>
+
+        {# La barre est cachée tant que le JavaScript ne l'a pas activée #}
+        <form class="search" id="product-search-form" role="search" hidden>
+            <label class="visually-hidden" for="product-search">Rechercher un produit</label>
+            <input class="form-control search__input" type="search" id="product-search"
+                   placeholder="Rechercher un produit…" autocomplete="off" spellcheck="false"
+                   enterkeyhint="search">
+            <svg class="search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="M20 20l-4-4"></path>
+            </svg>
+            <button class="search__clear" id="search-clear" type="button" data-search-clear
+                    aria-label="Effacer la recherche" hidden>&times;</button>
+        </form>
     {% endif %}
 </header>
 
 <div class="row g-4">
     {% for product in products %}
-        <div class="col-6 col-md-4 col-lg-3">
+        <div class="col-6 col-md-4 col-lg-3" data-search="{{ product.name }} {{ product.category }} {{ product.get_condition_display }}">
             <a class="tile" href="{% url 'product_detail' product.id %}">
                 <div class="tile__media">
                     <div class="tile__photo">
@@ -44,5 +61,18 @@
             </div>
         </div>
     {% endfor %}
+
+    {# Affiché par la recherche quand aucun produit ne correspond #}
+    <div class="col-12" id="no-results" hidden>
+        <div class="empty">
+            <h2 class="empty__title">Aucun résultat pour <span id="no-results-term"></span></h2>
+            <p>Vérifiez l'orthographe ou cherchez un mot plus court.</p>
+            <button class="btn btn-outline-primary" type="button" data-search-clear>Effacer la recherche</button>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'products/product_search.js' %}" defer></script>
 {% endblock %}

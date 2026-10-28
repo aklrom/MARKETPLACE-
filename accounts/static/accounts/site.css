@@ -785,6 +785,68 @@ main section h2 {
     display: none;
 }
 
+/* ---------- Recherche instantanée ---------- */
+[hidden] {
+    display: none !important;
+}
+
+.search {
+    position: relative;
+    align-self: center;
+    width: min(100%, 24rem);
+    margin-left: auto;
+}
+
+.search__input {
+    height: 3rem;
+    padding-right: 2.6rem;
+    padding-left: 2.8rem;
+    font-size: 1.05rem;
+}
+
+/* on garde notre croix, pas celle du navigateur */
+.search__input::-webkit-search-cancel-button {
+    display: none;
+}
+
+.search__icon {
+    position: absolute;
+    top: 50%;
+    left: 0.95rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+}
+
+.search__input:focus ~ .search__icon {
+    color: var(--ink);
+}
+
+.search__clear {
+    position: absolute;
+    top: 50%;
+    right: 0.4rem;
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    transform: translateY(-50%);
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.search__clear:hover {
+    background: var(--tint);
+    color: var(--ink);
+}
+
 /* ---------- Mobile ---------- */
 @media (max-width: 575.98px) {
     .price-tag {
@@ -801,6 +863,12 @@ main section h2 {
 
     .brand {
         font-size: 1.7rem;
+    }
+
+    .search {
+        width: 100%;
+        margin-top: 0.5rem;
+        margin-left: 0;
     }
 
     /* Les liens passent sur une seule ligne que l'on fait défiler du doigt */
