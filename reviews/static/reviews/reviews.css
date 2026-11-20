@@ -1,0 +1,50 @@
+/* --- Styles pour la section des avis (Reviews) --- */
+
+/* Carte d'avis individuelle */
+.review-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 4px solid #0d6efd; /* Bordure colorée sur le côté (bleu primaire Bootstrap) */
+    background-color: #fff;
+}
+
+.review-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Badge de note */
+.review-rating-badge {
+    background-color: #ffc107; /* Jaune étoile */
+    color: #000;
+    font-weight: 700;
+    padding: 0.35em 0.65em;
+    border-radius: 0.375rem;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+}
+
+/* Typographie */
+.review-author {
+    font-weight: 600;
+    color: #212529;
+}
+
+.review-text {
+    color: #495057;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Animation douce pour le bouton d'ajout d'avis */
+.btn-add-review {
+    transition: all 0.3s ease;
+}
+.btn-add-review:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3); /* Ombre verte subtile */
+}

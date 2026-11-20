@@ -9,7 +9,7 @@ from orders.models import Order
 # Create your views here.
 
 @login_required
-def create_review(request,id):
+def review_create(request,id):
     product=get_object_or_404(Product,id=id)
     has_purchased=Order.objects.filter(buyer=request.user,product=product,status=Order.Status.COMPLETED).exists()
     if not has_purchased:
@@ -28,7 +28,7 @@ def create_review(request,id):
     return render(request,"products/product_form.html",{"subform":form,"subtitle": "Quelques avis sur le produit"})
 
 @login_required
-def update_review(request,id):
+def review_update(request,id):
     review=get_object_or_404(Review,id=id)
     product=review.product
     if review.publier_id!= request.user.id:

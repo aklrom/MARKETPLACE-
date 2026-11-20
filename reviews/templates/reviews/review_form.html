@@ -4,53 +4,57 @@
 
 {% block content %}
 <div class="row justify-content-center mt-4">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">{{ subtitle|default:title|default:"Laisser un avis" }}</h4>
-            </div>
-            <div class="card-body">
-                
-                {% if product %}
-                    <p class="text-muted mb-3">
-                        Produit : <strong>{{ product.name }}</strong>
-                    </p>
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="card shadow border-0 p-4">
+            <h1 class="h3 mb-4">{{ subtitle|default:title|default:"Laisser un avis" }}</h1>
+            
+            {% if product %}
+                <div class="alert alert-light border mb-4">
+                    <strong>Produit :</strong> {{ product.name }}
+                </div>
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger py-2">{{ form.non_field_errors }}</div>
                 {% endif %}
 
-                <form method="post" novalidate>
-                    {% csrf_token %}
-                    
-                    <!-- Affichage des erreurs globales du formulaire -->
-                    {% if form.errors %}
-                        <div class="alert alert-danger">
-                            Merci de corriger les erreurs ci-dessous avant de soumettre.
-                        </div>
-                    {% endif %}
-
-                    <!-- 
-                      Rendu du formulaire. 
-                      Grâce à ton code dans forms.py (__init__), les classes 
-                      'form-control' et 'form-select' sont déjà appliquées automatiquement !
-                    -->
-                    {{ form.as_p }}
-
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            {% if title == "Modifier mon avis" %}
-                                Enregistrer les modifications
-                            {% else %}
-                                Publier mon avis
-                            {% endif %}
-                        </button>
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {# Ton forms.py ajoute déjà 'form-control' ou 'form-select' automatiquement, c'est parfait ! #}
+                        {{ field }}
                         
-                        <!-- Le bouton annuler doit pointer vers le détail du produit -->
-                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-secondary">
-                            Annuler
-                        </a>
+                        {% if field.help_text %}
+                            <div class="form-text mb-2">{{ field.help_text }}</div>
+                        {% endif %}
+                        
+                        {% for error in field.errors %}
+                            <div class="text-danger small mb-2">{{ error }}</div>
+                        {% endfor %}
                     </div>
-                </form>
-            </div>
+                {% endfor %}
+
+                <div class="d-grid gap-2 mt-4">
+                    <button class="btn btn-primary w-100" type="submit">
+                        {% if title == "Modifier mon avis" %}
+                            Enregistrer les modifications
+                        {% else %}
+                            Publier mon avis
+                        {% endif %}
+                    </button>
+                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-secondary w-100">
+                        Annuler
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+{% endblock %}
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'reviews/reviews.js' %}" defer></script>
 {% endblock %}
