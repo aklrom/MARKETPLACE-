@@ -9,7 +9,7 @@ urlpatterns = [
     # Correspond à {% url 'review_create' product.id %} dans le template
     path(
         'product/<int:id>/review/create/', 
-        views.create_review, 
+        views.review_create, 
         name='review_create'
     ),
     

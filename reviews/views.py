@@ -25,8 +25,7 @@ def review_create(request,id):
             return redirect("product_detail", id=product.id)
     else:
         form=ReviewForm()
-    return render(request,"products/product_form.html",{"subform":form,"subtitle": "Quelques avis sur le produit"})
-
+    return render(request, "reviews/review_form.html", {"form": form, "title": "Laisser un avis", "product": product})
 @login_required
 def review_update(request,id):
     review=get_object_or_404(Review,id=id)
