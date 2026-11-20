@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title|default:"Laisser un avis" }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{{ subtitle|default:title|default:"Laisser un avis" }}</h4>
+            </div>
+            <div class="card-body">
+                
+                {% if product %}
+                    <p class="text-muted mb-3">
+                        Produit : <strong>{{ product.name }}</strong>
+                    </p>
+                {% endif %}
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Affichage des erreurs globales du formulaire -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            Merci de corriger les erreurs ci-dessous avant de soumettre.
+                        </div>
+                    {% endif %}
+
+                    <!-- 
+                      Rendu du formulaire. 
+                      Grâce à ton code dans forms.py (__init__), les classes 
+                      'form-control' et 'form-select' sont déjà appliquées automatiquement !
+                    -->
+                    {{ form.as_p }}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            {% if title == "Modifier mon avis" %}
+                                Enregistrer les modifications
+                            {% else %}
+                                Publier mon avis
+                            {% endif %}
+                        </button>
+                        
+                        <!-- Le bouton annuler doit pointer vers le détail du produit -->
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-secondary">
+                            Annuler
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import ProductForm
 from .models import Product
+from orders.models import Order  # <--- AJOUT : Import du modèle Order pour la vérification
 
 
 def product_list(request):
@@ -22,7 +23,25 @@ def product_detail(request, id):
     # Un article retiré de la vente n'est visible que par son vendeur.
     if not product.is_active and product.seller_id != request.user.id:
         raise Http404
-    return render(request, "products/product_detail.html", {"product": product})
+
+    # --- NOUVEAU : Vérification du droit d'avis ---
+    can_review = False
+    if request.user.is_authenticated:
+        can_review = Order.objects.filter(
+            buyer=request.user,
+            product=product,
+            status=Order.Status.COMPLETED  # On vérifie que la commande est bien terminée
+        ).exists()
+    # ----------------------------------------------
+
+    return render(
+        request, 
+        "products/product_detail.html", 
+        {
+            "product": product,
+            "can_review": can_review,  # <--- AJOUT : On passe cette variable au template
+        }
+    )
 
 
 @login_required

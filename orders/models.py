@@ -49,9 +49,7 @@ class Order(models.Model):
     def __str__(self):
         return f"Commande #{self.pk} - {self.product.name}"
 
-    # ------------------------------------------------------------------
-    # Propriétés pratiques pour les templates
-    # ------------------------------------------------------------------
+    
     @property
     def total(self):
         return self.unit_price * self.quantity
@@ -89,10 +87,7 @@ class Order(models.Model):
         )
         return self._whatsapp_link(self.buyer, text)
 
-    # ------------------------------------------------------------------
-    # Actions : verrouillées pour éviter les doubles clics et les actions
-    # simultanées de l'acheteur et du vendeur.
-    # ------------------------------------------------------------------
+    
     @classmethod
     def _locked(cls, order_id):
         return (
