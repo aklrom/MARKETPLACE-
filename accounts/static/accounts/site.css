@@ -720,6 +720,94 @@ main > h1.h4 {
     max-width: 62ch;
 }
 
+/* Synthèse des avis, inspirée du système de notation Play Store */
+.rating-summary {
+    display: grid;
+    grid-template-columns: minmax(130px, 180px) 1fr;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.rating-summary__score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.rating-summary__score strong {
+    font-size: 2.8rem;
+    line-height: 1;
+}
+
+.rating-stars {
+    position: relative;
+    display: inline-block;
+    width: 5em;
+    overflow: hidden;
+    color: #d5d8e2;
+    line-height: 1;
+    letter-spacing: 0.08em;
+}
+
+.rating-stars span {
+    display: block;
+}
+
+.rating-stars::after {
+    content: "★★★★★";
+    position: absolute;
+    inset: 0;
+    width: calc(var(--rating, 0) * 20%);
+    overflow: hidden;
+    color: #f5b301;
+    white-space: nowrap;
+    letter-spacing: 0.08em;
+}
+
+.rating-stars--large {
+    margin: 0.35rem 0;
+    font-size: 1.15rem;
+}
+
+.rating-summary__distribution {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.rating-bar {
+    display: grid;
+    grid-template-columns: 1rem minmax(80px, 1fr) 2.5rem;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+}
+
+.rating-bar__track {
+    height: 0.55rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #dfe3ec;
+}
+
+.rating-bar__fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: #f5b301;
+}
+
+.rating-bar__count {
+    color: var(--muted);
+    text-align: right;
+}
+
+@media (max-width: 575.98px) {
+    .rating-summary {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Tampon « Épuisé » */
 .sold-out {
     display: inline-block;

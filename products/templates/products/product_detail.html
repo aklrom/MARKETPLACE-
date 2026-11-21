@@ -63,18 +63,25 @@
         <!-- Affichage de la note moyenne globale -->
         {% if product.reviews_count > 0 %}
         <div class="card mb-4 bg-light border-0">
-            <div class="card-body d-flex align-items-center flex-wrap">
-                <span class="fs-4 fw-bold text-dark me-3">{{ product.average_rating }}/5</span>
-                <div class="text-warning fs-5">
-                    {% for i in "12345"|make_list %}
-                        {% if forloop.counter <= product.average_rating %}
-                            <i class="bi bi-star-fill"></i>
-                        {% else %}
-                            <i class="bi bi-star"></i>
-                        {% endif %}
+            <div class="card-body rating-summary">
+                <div class="rating-summary__score">
+                    <strong>{{ product.average_rating }}</strong>
+                    <div class="rating-stars rating-stars--large" style="--rating: {{ product.average_rating }};" aria-label="{{ product.average_rating }} étoiles sur 5">
+                        <span aria-hidden="true">★★★★★</span>
+                    </div>
+                    <span class="text-muted">{{ product.reviews_count }} avis</span>
+                </div>
+                <div class="rating-summary__distribution" aria-label="Répartition des notes">
+                    {% for item in rating_distribution %}
+                    <div class="rating-bar">
+                        <span class="rating-bar__label">{{ item.rating }}</span>
+                        <span class="rating-bar__track" aria-hidden="true">
+                            <span class="rating-bar__fill" style="width: {{ item.percentage }}%;"></span>
+                        </span>
+                        <span class="rating-bar__count">{{ item.count }}</span>
+                    </div>
                     {% endfor %}
                 </div>
-                <span class="text-muted ms-3">Basé sur {{ product.reviews_count }} avis</span>
             </div>
         </div>
         {% endif %}
@@ -108,15 +115,8 @@
                             <h5 class="mb-1">
                                 {{ review.publier.first_name }} {{ review.publier.last_name|default:"Utilisateur" }}
                             </h5>
-                            <div class="text-warning">
-                                {% for i in "12345"|make_list %}
-                                    {% if forloop.counter <= review.rating %}
-                                        <i class="bi bi-star-fill"></i>
-                                    {% else %}
-                                        <i class="bi bi-star"></i>
-                                    {% endif %}
-                                {% endfor %}
-                                <span class="text-muted ms-2 small">({{ review.rating }}/5)</span>
+                            <div class="rating-stars" style="--rating: {{ review.rating }};" aria-label="{{ review.rating }} étoiles sur 5">
+                                <span aria-hidden="true">★★★★★</span>
                             </div>
                         </div>
                         <small class="text-muted">{{ review.created_at|date:"d F Y" }}</small>

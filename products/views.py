@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Count
 from .forms import ProductForm
 from .models import Product
 from reviews.models import Review  
@@ -48,6 +49,21 @@ def product_detail(request, id):
     except EmptyPage:
         # Si la page est hors limites (ex: page 99), on affiche la dernière page
         reviews = paginator.page(paginator.num_pages)
+
+    rating_counts = dict(
+        product.reviews.values("rating").annotate(count=Count("id")).values_list("rating", "count")
+    )
+    reviews_count = product.reviews_count
+    rating_distribution = []
+    for rating in range(5, 0, -1):
+        count = rating_counts.get(rating, 0)
+        percentage = round(count * 100 / reviews_count) if reviews_count else 0
+        rating_distribution.append({
+            "rating": rating,
+            "count": count,
+            "percentage": percentage,
+        })
+
     return render(
         request, 
         "products/product_detail.html", 
@@ -56,6 +72,7 @@ def product_detail(request, id):
             "can_review": can_review, 
             "reviews": reviews,
             "has_reviewed": has_reviewed,
+            "rating_distribution": rating_distribution,
         }
     )
 
