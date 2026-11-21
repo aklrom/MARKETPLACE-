@@ -11,6 +11,9 @@ from orders.models import Order
 @login_required
 def review_create(request,id):
     product=get_object_or_404(Product,id=id)
+    if Review.objects.filter(product=product, publier=request.user).exists():
+        return HttpResponseForbidden("Vous avez déjà laissé un avis pour ce produit.")
+
     has_purchased=Order.objects.filter(buyer=request.user,product=product,status=Order.Status.COMPLETED).exists()
     if not has_purchased:
         return HttpResponseForbidden("Vous ne pouvez pas laisser un avis sur ce produit car vous ne l'avez pas acheté.")

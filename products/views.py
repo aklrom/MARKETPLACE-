@@ -1,10 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import ProductForm
 from .models import Product
-from orders.models import Order  # <--- AJOUT : Import du modèle Order pour la vérification
+from reviews.models import Review  
+from orders.models import Order  
 
 
 def product_list(request):
@@ -26,20 +27,35 @@ def product_detail(request, id):
 
     # --- NOUVEAU : Vérification du droit d'avis ---
     can_review = False
+    has_reviewed = False
     if request.user.is_authenticated:
         can_review = Order.objects.filter(
             buyer=request.user,
             product=product,
             status=Order.Status.COMPLETED  # On vérifie que la commande est bien terminée
         ).exists()
+        has_reviewed=product.reviews.filter(publier=request.user).exists()
     # ----------------------------------------------
-
+    reviews_list = product.reviews.all()
+    paginator = Paginator(reviews_list, 5)  # Change 5 en 10 si tu préfères
+    page_number = request.GET.get('page')
+    
+    try:
+        reviews = paginator.page(page_number)
+    except PageNotAnInteger:
+        # Si la page n'est pas un entier, on affiche la première page
+        reviews = paginator.page(1)
+    except EmptyPage:
+        # Si la page est hors limites (ex: page 99), on affiche la dernière page
+        reviews = paginator.page(paginator.num_pages)
     return render(
         request, 
         "products/product_detail.html", 
         {
             "product": product,
-            "can_review": can_review,  # <--- AJOUT : On passe cette variable au template
+            "can_review": can_review, 
+            "reviews": reviews,
+            "has_reviewed": has_reviewed,
         }
     )
 

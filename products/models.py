@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models.aggregates import Avg
 
 
 class Category(models.Model):
@@ -66,3 +67,14 @@ class Product(models.Model):
     @property
     def in_stock(self):
         return self.is_active and self.quantity > 0
+
+    @property
+    def average_rating(self):
+        """Calcule la moyenne des notes, retourne 0 s'il n'y a pas d'avis"""
+        result = self.reviews.aggregate(Avg('rating'))['rating__avg']
+        return round(result, 1) if result is not None else 0.0
+
+    @property
+    def reviews_count(self):
+        """Retourne le nombre total d'avis"""
+        return self.reviews.count()

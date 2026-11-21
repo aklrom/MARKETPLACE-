@@ -8,6 +8,10 @@ class Review(models.Model):
     text=models.TextField()
     rating=models.IntegerField(choices=[(1,"1"),(2,"2"),(3,"3"),(4,"4"),(5,"5")])
     created_at=models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('product', 'publier')  # 1a: Un seul avis par produit et par utilisateur
+        ordering = ['-created_at']   
     def __str__(self):
         if self.user==None: 
             return f" avis sur le {self.product}"
