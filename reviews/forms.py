@@ -3,8 +3,8 @@ from .models import Review
 
 class ReviewForm(forms.ModelForm):
     class Meta:
-        model=Review
-        fields=[
+        model = Review
+        fields = [
             "text",
             "rating"
         ]
@@ -12,11 +12,17 @@ class ReviewForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            widget=field.widget
-            if isinstance(widget,forms.CheckboxInput):
-                widget.attrs["class"]="form-check-input"
+            widget = field.widget
+            if isinstance(widget, forms.CheckboxInput):
+                widget.attrs["class"] = "form-check-input"
             elif isinstance(widget, forms.Select):
-                widget.attrs["class"]="form-select"
+                widget.attrs["class"] = "form-select"
             else:
-                widget.attrs["class"]="form-control"
-        self.fields["text"].widget.attrs["rows"]=4                    
+                widget.attrs["class"] = "form-control"
+        self.fields["text"].widget.attrs["rows"] = 4
+
+    def clean_text(self):
+        text = self.cleaned_data["text"].strip()
+        if not text:
+            raise forms.ValidationError("Le commentaire ne peut pas être vide.")
+        return text
