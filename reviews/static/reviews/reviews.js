@@ -1,19 +1,43 @@
 // static/reviews/reviews.js
 document.addEventListener('DOMContentLoaded', function() {
-    // Cible le champ textarea du formulaire d'avis
     const textarea = document.querySelector('textarea[name="text"]');
-    
+
     if (textarea) {
-        // Fonction pour ajuster la hauteur
         const autoResize = () => {
-            textarea.style.height = 'auto'; // Réinitialise pour recalculer
-            textarea.style.height = (textarea.scrollHeight) + 'px'; // Ajuste à la hauteur du contenu
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
         };
 
-        // Écouteur d'événement à chaque frappe
         textarea.addEventListener('input', autoResize);
-        
-        // Déclenche une fois au chargement (utile pour la vue "Modifier" si le texte est déjà long)
         autoResize();
     }
+
+    const ratingGroup = document.querySelector('.rating-control__stars');
+    if (!ratingGroup) {
+        return;
+    }
+
+    const feedback = document.querySelector('[data-rating-feedback]');
+    const inputs = ratingGroup.querySelectorAll('input[type="radio"]');
+    const updateFeedback = (value) => {
+        feedback.textContent = value
+            ? `${value} étoile${value === '1' ? '' : 's'}`
+            : 'Choisir une note';
+    };
+
+    inputs.forEach((input) => {
+        input.addEventListener('change', () => updateFeedback(input.value));
+        input.addEventListener('focus', () => updateFeedback(input.value));
+    });
+
+    ratingGroup.querySelectorAll('.rating-control__star').forEach((star) => {
+        star.addEventListener('mouseenter', () => {
+            updateFeedback(star.dataset.rating);
+        });
+    });
+
+    ratingGroup.addEventListener('mouseleave', () => {
+        const selected = ratingGroup.querySelector('input:checked');
+        updateFeedback(selected ? selected.value : '');
+    });
 });

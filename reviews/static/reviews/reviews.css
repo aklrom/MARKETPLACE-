@@ -1,50 +1,159 @@
-/* --- Styles pour la section des avis (Reviews) --- */
+/* Section des avis sur la fiche produit */
+.review-section {
+    max-width: 58rem;
+    margin-inline: auto;
+}
 
-/* Carte d'avis individuelle */
+.review-section__title {
+    margin-bottom: 1.5rem;
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    font-weight: 750;
+}
+
+.review-summary {
+    overflow: hidden;
+    border: 1px solid #e3e7ef;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, #f8f9fc, #fff);
+}
+
+.review-summary .card-body {
+    padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.review-list {
+    display: grid;
+    gap: 1rem;
+}
+
 .review-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-left: 4px solid #0d6efd; /* Bordure colorée sur le côté (bleu primaire Bootstrap) */
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #e3e7ef;
+    border-radius: 0.9rem;
     background-color: #fff;
+    box-shadow: 0 0.2rem 0.8rem rgba(27, 42, 92, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .review-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1.25rem rgba(27, 42, 92, 0.1);
 }
 
-/* Badge de note */
-.review-rating-badge {
-    background-color: #ffc107; /* Jaune étoile */
-    color: #000;
+.review-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.review-card__author {
+    margin: 0 0 0.35rem;
+    color: #1b2a5c;
+    font-size: 1.05rem;
     font-weight: 700;
-    padding: 0.35em 0.65em;
-    border-radius: 0.375rem;
-    font-size: 0.85em;
-    letter-spacing: 0.5px;
 }
 
-/* Typographie */
-.review-author {
-    font-weight: 600;
-    color: #212529;
+.rating-stars--review {
+    font-size: 1rem;
 }
 
-.review-text {
-    color: #495057;
+.review-card__date {
+    flex-shrink: 0;
+    color: #737b8c;
+    font-size: 0.85rem;
+}
+
+.review-card__text {
+    margin-top: 1rem;
+    color: #485064;
     line-height: 1.6;
-    font-size: 0.95rem;
 }
 
-.review-date {
-    font-size: 0.8rem;
+.review-card__text p:last-child {
+    margin-bottom: 0;
+}
+
+.review-card__actions {
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid #edf0f5;
+}
+
+.review-empty {
+    padding: 2rem 1rem;
+    border: 1px dashed #cbd2df;
+    border-radius: 0.9rem;
+    background: #f8f9fc;
+    text-align: center;
+}
+
+.review-empty p {
+    margin-bottom: 0.25rem;
+    color: #1b2a5c;
+    font-weight: 700;
+}
+
+.review-empty span {
+    color: #737b8c;
+}
+
+@media (max-width: 575.98px) {
+    .review-card {
+        padding: 1rem;
+    }
+
+    .review-card__header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+/* Sélecteur de note en étoiles */
+.rating-control__stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    width: fit-content;
+}
+
+.rating-control__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    clip-path: inset(50%);
+}
+
+.rating-control__star {
+    padding: 0 0.12rem;
+    color: #c9ced8;
+    cursor: pointer;
+    font-size: 2.5rem;
+    line-height: 1.15;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.rating-control__input:checked ~ .rating-control__star,
+.rating-control__star:hover,
+.rating-control__star:hover ~ .rating-control__star {
+    color: #f5b301;
+}
+
+.rating-control__star:hover {
+    transform: scale(1.12);
+}
+
+.rating-control__input:focus-visible + .rating-control__star {
+    outline: 3px solid #1b2a5c;
+    outline-offset: 3px;
+    border-radius: 0.25rem;
+}
+
+.rating-control__feedback {
+    min-height: 1.5rem;
     color: #6c757d;
-}
-
-/* Animation douce pour le bouton d'ajout d'avis */
-.btn-add-review {
-    transition: all 0.3s ease;
-}
-.btn-add-review:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3); /* Ombre verte subtile */
+    font-size: 0.9rem;
 }

@@ -2,6 +2,11 @@
 
 {% block title %}{{ title|default:"Laisser un avis" }}{% endblock %}
 
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'reviews/reviews.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center mt-4">
     <div class="col-12 col-md-8 col-lg-6">
@@ -23,9 +28,38 @@
 
                 {% for field in form %}
                     <div class="mb-3">
-                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {# Ton forms.py ajoute déjà 'form-control' ou 'form-select' automatiquement, c'est parfait ! #}
-                        {{ field }}
+                        {% if field.name == "rating" %}
+                            <span class="form-label d-block" id="{{ field.id_for_label }}_label">{{ field.label }}</span>
+                            <div class="rating-control">
+                                <div class="rating-control__stars" role="radiogroup" aria-labelledby="{{ field.id_for_label }}_label">
+                                    {% for value in "54321"|make_list %}
+                                        <input
+                                            class="rating-control__input"
+                                            type="radio"
+                                            name="{{ field.html_name }}"
+                                            id="{{ field.id_for_label }}_{{ value }}"
+                                            value="{{ value }}"
+                                            {% if field.value|stringformat:"s" == value %}checked{% endif %}
+                                            {% if field.field.required %}required{% endif %}
+                                        >
+                                        <label class="rating-control__star" for="{{ field.id_for_label }}_{{ value }}" data-rating="{{ value }}" title="{{ value }} étoile{{ value|pluralize }}">
+                                            <span aria-hidden="true">★</span>
+                                            <span class="visually-hidden">{{ value }} étoile{{ value|pluralize }}</span>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="rating-control__feedback" aria-live="polite" data-rating-feedback>
+                                    {% if field.value %}
+                                        {{ field.value }} étoile{{ field.value|pluralize }}
+                                    {% else %}
+                                        Choisir une note
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                        {% endif %}
                         
                         {% if field.help_text %}
                             <div class="form-text mb-2">{{ field.help_text }}</div>

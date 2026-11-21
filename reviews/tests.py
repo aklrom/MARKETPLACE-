@@ -72,8 +72,28 @@ class ReviewTests(TestCase):
         self.assertEqual(review.rating, 5)
         self.assertEqual(review.text, "Très bon produit")
 
+        detail_response = self.client.get(
+            reverse("product_detail", args=[self.product.id])
+        )
+        self.assertContains(
+            detail_response,
+            'class="rating-stars rating-stars--review" style="--rating: 5;"',
+        )
+        self.assertContains(detail_response, 'style="--rating: 5.0;"')
+
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
+
+    def test_rating_form_renders_star_controls_and_assets(self):
+        self.client.force_login(self.buyer)
+        response = self.client.get(
+            reverse("reviews:review_create", args=[self.product.id])
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'role="radiogroup"')
+        self.assertContains(response, 'name="rating"')
+        self.assertContains(response, "reviews/reviews.css")
+        self.assertContains(response, "reviews/reviews.js")
 
     def test_whitespace_text_is_rejected(self):
         self.client.force_login(self.buyer)
@@ -106,6 +126,13 @@ class ReviewTests(TestCase):
         review.refresh_from_db()
         self.assertEqual(review.text, "Après")
         self.assertEqual(review.rating, 5)
+        detail_response = self.client.get(
+            reverse("product_detail", args=[self.product.id])
+        )
+        self.assertContains(
+            detail_response,
+            'class="rating-stars rating-stars--review" style="--rating: 5;"',
+        )
 
     def test_model_prevents_rating_outside_one_to_five(self):
         review = Review(

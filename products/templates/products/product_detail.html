@@ -2,6 +2,11 @@
 
 {% block title %}{{ product.name }}{% endblock %}
 
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'reviews/reviews.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="row g-4 g-lg-5 align-items-start">
     <div class="col-md-6">
@@ -56,17 +61,15 @@
 
 <hr class="my-5">
 
-<div class="row">
-    <div class="col-12">
-        <h2 id="avis-section" class="h3 mb-4">Avis des acheteurs</h2>
+<section class="review-section" aria-labelledby="avis-section">
+    <h2 id="avis-section" class="review-section__title">Avis des acheteurs</h2>
 
-        <!-- Affichage de la note moyenne globale -->
-        {% if product.reviews_count > 0 %}
-        <div class="card mb-4 bg-light border-0">
+    {% if product.reviews_count > 0 %}
+        <div class="review-summary mb-4">
             <div class="card-body rating-summary">
                 <div class="rating-summary__score">
                     <strong>{{ product.average_rating }}</strong>
-                    <div class="rating-stars rating-stars--large" style="--rating: {{ product.average_rating }};" aria-label="{{ product.average_rating }} étoiles sur 5">
+                    <div class="rating-stars rating-stars--large" style="--rating: {{ product.average_rating|floatformat:'1u' }};" aria-label="{{ product.average_rating }} étoiles sur 5">
                         <span aria-hidden="true">★★★★★</span>
                     </div>
                     <span class="text-muted">{{ product.reviews_count }} avis</span>
@@ -84,100 +87,97 @@
                 </div>
             </div>
         </div>
-        {% endif %}
+    {% endif %}
 
-        <!-- Bouton pour ajouter un avis -->
-        {% if user.is_authenticated %}
-            {% if can_review %}
-                {% if not has_reviewed %}
-                    <a href="{% url 'reviews:review_create' product.id %}" class="btn btn-success mb-4">
-                        <i class="bi bi-pencil-square"></i> Laisser un avis sur ce produit
-                    </a>
-                {% else %}
-                    <div class="alert alert-success mb-4">
-                        <i class="bi bi-check-circle"></i> Vous avez déjà laissé un avis sur ce produit.
-                    </div>
-                {% endif %}
+    {% if user.is_authenticated %}
+        {% if can_review %}
+            {% if not has_reviewed %}
+                <a href="{% url 'reviews:review_create' product.id %}" class="btn btn-success mb-4">
+                    <i class="bi bi-pencil-square"></i> Laisser un avis sur ce produit
+                </a>
             {% else %}
-                <div class="alert alert-info mb-4">
-                    <i class="bi bi-info-circle"></i> Vous ne pouvez laisser un avis que sur les produits que vous avez achetés et reçus.
+                <div class="alert alert-success mb-4">
+                    <i class="bi bi-check-circle"></i> Vous avez déjà laissé un avis sur ce produit.
                 </div>
-            {% endif %}
-        {% endif %}
-
-        <!-- Liste des avis -->
-        {% if reviews %}
-            <div class="list-group">
-                {% for review in reviews %}
-                <div class="list-group-item list-group-item-action flex-column align-items-start mb-3 border rounded shadow-sm">
-                    <div class="d-flex w-100 justify-content-between align-items-start">
-                        <div>
-                            <h5 class="mb-1">
-                                {{ review.publier.first_name }} {{ review.publier.last_name|default:"Utilisateur" }}
-                            </h5>
-                            <div class="rating-stars" style="--rating: {{ review.rating }};" aria-label="{{ review.rating }} étoiles sur 5">
-                                <span aria-hidden="true">★★★★★</span>
-                            </div>
-                        </div>
-                        <small class="text-muted">{{ review.created_at|date:"d F Y" }}</small>
-                    </div>
-                    <p class="mb-1 mt-3 text-secondary">{{ review.text|linebreaks }}</p>
-                    
-                    {% if user == review.publier %}
-                    <div class="mt-3 pt-2 border-top">
-                        <a href="{% url 'reviews:review_update' review.id %}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-pencil"></i> Modifier mon avis
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
-                {% endfor %}
-            </div>
-
-            <!-- Pagination -->
-            {% if reviews.has_other_pages %}
-            <nav aria-label="Pagination des avis" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    {% if reviews.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ reviews.previous_page_number }}#avis-section">
-                                <i class="bi bi-chevron-left"></i> Précédent
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled"><span class="page-link">Précédent</span></li>
-                    {% endif %}
-
-                    {% for i in reviews.paginator.page_range %}
-                        {% if reviews.number == i %}
-                            <li class="page-item active" aria-current="page">
-                                <span class="page-link">{{ i }}</span>
-                            </li>
-                        {% else %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ i }}#avis-section">{{ i }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if reviews.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ reviews.next_page_number }}#avis-section">
-                                Suivant <i class="bi bi-chevron-right"></i>
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled"><span class="page-link">Suivant</span></li>
-                    {% endif %}
-                </ul>
-            </nav>
             {% endif %}
         {% else %}
-            <div class="alert alert-light border text-center py-4">
-                <p class="text-muted mb-0">Aucun avis pour le moment. Soyez le premier à partager votre expérience !</p>
+            <div class="alert alert-info mb-4">
+                <i class="bi bi-info-circle"></i> Vous ne pouvez laisser un avis que sur les produits que vous avez achetés et reçus.
             </div>
         {% endif %}
-    </div>
-</div>
+    {% endif %}
+
+    {% if reviews %}
+        <div class="review-list">
+            {% for review in reviews %}
+            <article class="review-card">
+                <header class="review-card__header">
+                    <div>
+                        <h3 class="review-card__author">
+                            {{ review.publier.first_name }} {{ review.publier.last_name|default:"Utilisateur" }}
+                        </h3>
+                        <div class="rating-stars rating-stars--review" style="--rating: {{ review.rating }};" aria-label="{{ review.rating }} étoiles sur 5">
+                            <span aria-hidden="true">★★★★★</span>
+                        </div>
+                    </div>
+                    <time class="review-card__date" datetime="{{ review.created_at|date:'c' }}">{{ review.created_at|date:"d F Y" }}</time>
+                </header>
+                <div class="review-card__text">{{ review.text|linebreaks }}</div>
+
+                {% if user == review.publier %}
+                <footer class="review-card__actions">
+                    <a href="{% url 'reviews:review_update' review.id %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil"></i> Modifier mon avis
+                    </a>
+                </footer>
+                {% endif %}
+            </article>
+            {% endfor %}
+        </div>
+
+        {% if reviews.has_other_pages %}
+        <nav aria-label="Pagination des avis" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if reviews.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ reviews.previous_page_number }}#avis-section">
+                            <i class="bi bi-chevron-left"></i> Précédent
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Précédent</span></li>
+                {% endif %}
+
+                {% for i in reviews.paginator.page_range %}
+                    {% if reviews.number == i %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{ i }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}#avis-section">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if reviews.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ reviews.next_page_number }}#avis-section">
+                            Suivant <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Suivant</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    {% else %}
+        <div class="review-empty">
+            <p>Aucun avis pour le moment.</p>
+            <span>Soyez le premier à partager votre expérience !</span>
+        </div>
+    {% endif %}
+</section>
       
 {% endblock %}
