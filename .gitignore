@@ -4,8 +4,6 @@ staticfiles/
 venv/
 .venv/
 __pycache__/
-.envdb.sqlite3
 *.sqlite3
 .env
-__pycache__/
 *.pyc
