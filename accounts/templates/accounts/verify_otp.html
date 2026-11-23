@@ -1,0 +1,50 @@
+{% extends "base.html" %} <!-- Adaptez selon votre template de base -->
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <h3 class="text-center mb-4">Vérification de l'email</h3>
+            <p class="text-muted text-center">
+                Nous avons envoyé un code à 6 chiffres à <strong>{{ email }}</strong>.<br>
+                Le code expire dans 10 minutes.
+            </p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="otp_code" class="form-label">Code de vérification</label>
+                    <input type="text" 
+                           name="otp_code" 
+                           id="otp_code" 
+                           class="form-control form-control-lg text-center" 
+                           style="letter-spacing: 8px; font-size: 1.5rem;" 
+                           maxlength="6" 
+                           pattern="\d{6}" 
+                           inputmode="numeric" 
+                           autocomplete="one-time-code" 
+                           required 
+                           placeholder="000000">
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-lg">Vérifier et activer mon compte</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    Vous n'avez pas reçu le code ? <br>
+                    <a href="{% url 'register' %}" class="text-decoration-none">Réessayer avec un autre email</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
