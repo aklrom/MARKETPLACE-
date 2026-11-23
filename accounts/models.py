@@ -63,11 +63,11 @@ class User(AbstractUser):
         return f"https://wa.me/{self.whatsapp_number.lstrip('+')}"     
 
 
-    class OTPVerification(models.Model):
-        email = models.EmailField()
-        otp_code = models.CharField(max_length=6)
-        created_at = models.DateTimeField(auto_now_add=True)
-        is_verified = models.BooleanField(default=False)
+class OTPVerification(models.Model):
+    email = models.EmailField()
+    otp_code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_verified = models.BooleanField(default=False)
 
     def is_valid(self):
         
