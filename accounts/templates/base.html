@@ -47,8 +47,56 @@
     </main>
 
     <footer class="site-footer">
-        <div class="container">
-            Acheteurs et vendeurs échangent directement sur WhatsApp.
+        <div class="container site-footer__container">
+            <div class="site-footer__main">
+                <div class="site-footer__brand">
+                    <a class="brand" href="{% url 'home' %}">
+                        <span class="brand__tag" aria-hidden="true"></span>TWéWè
+                    </a>
+                    <p>La marketplace pour découvrir des annonces, vendre vos articles et échanger simplement.</p>
+                    <span class="site-footer__promise"><span aria-hidden="true">●</span> Acheteurs et vendeurs en contact direct</span>
+                </div>
+
+                <nav class="site-footer__nav" aria-label="Découvrir">
+                    <h2>Découvrir</h2>
+                    <ul>
+                        <li><a href="{% url 'product_list' %}">Toutes les annonces</a></li>
+                        <li><a href="{% url 'home' %}#how-title">Comment ça marche</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'product_create' %}">Vendre un article</a></li>
+                        {% else %}
+                            <li><a href="{% url 'register' %}">Vendre sur TWéWè</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+
+                <nav class="site-footer__nav" aria-label="Mon compte">
+                    <h2>Mon compte</h2>
+                    <ul>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'dashboard' %}">Mon espace</a></li>
+                            <li><a href="{% url 'orders_list' %}">Mes commandes</a></li>
+                            <li><a href="{% url 'cart' %}">Mon panier</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Connexion</a></li>
+                            <li><a href="{% url 'register' %}">Créer un compte</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+
+                <div class="site-footer__cta">
+                    <span class="site-footer__eyebrow">Prêt à commencer ?</span>
+                    <p>Votre prochaine trouvaille est peut-être à portée de clic.</p>
+                    <a class="btn btn-primary" href="{% url 'product_list' %}">
+                        Voir les annonces <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="site-footer__bottom">
+                <span>© {% now "Y" %} TWéWè · Achetez et vendez simplement.</span>
+                <a href="#contenu">Retour au contenu <span aria-hidden="true">↑</span></a>
+            </div>
         </div>
     </footer>
 

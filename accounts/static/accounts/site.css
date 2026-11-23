@@ -213,10 +213,153 @@ h1, h2, h3, h4, h5, h6,
 /* ---------- Pied de page ---------- */
 .site-footer {
     margin-top: auto;
-    padding: 1.25rem 0;
+    padding: 3.5rem 0 1.1rem;
+    border-top: 5px solid var(--saffron);
     background: var(--ink-deep);
     color: rgba(255, 255, 255, 0.78);
     font-size: 0.9rem;
+    background-image: radial-gradient(circle at 88% 15%, rgba(255, 180, 0, 0.08) 0 1px, transparent 1.5px);
+    background-size: 18px 18px;
+}
+
+.site-footer__main {
+    display: grid;
+    grid-template-columns: minmax(210px, 1.35fr) repeat(2, minmax(120px, 0.7fr)) minmax(220px, 1fr);
+    gap: 2rem;
+    padding-bottom: 2.8rem;
+}
+
+.site-footer .brand {
+    --hole: var(--ink-deep);
+}
+
+.site-footer__brand > p {
+    max-width: 290px;
+    margin: 1rem 0;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+}
+
+.site-footer__promise {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.78rem;
+}
+
+.site-footer__promise > span {
+    color: var(--saffron);
+    font-size: 0.55rem;
+}
+
+.site-footer__nav h2 {
+    margin: 0.3rem 0 1rem;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.site-footer__nav ul {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.site-footer__nav a,
+.site-footer__bottom a {
+    color: rgba(255, 255, 255, 0.72);
+    text-decoration: none;
+    transition: color 160ms ease;
+}
+
+.site-footer__nav a:hover,
+.site-footer__bottom a:hover {
+    color: var(--saffron);
+}
+
+.site-footer__cta {
+    padding: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.045);
+}
+
+.site-footer__eyebrow {
+    color: var(--saffron);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.site-footer__cta p {
+    margin: 0.55rem 0 1rem;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.05;
+}
+
+.site-footer__cta .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.site-footer__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.78rem;
+}
+
+.site-footer__bottom a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+@media (max-width: 900px) {
+    .site-footer__main {
+        grid-template-columns: minmax(200px, 1fr) repeat(2, minmax(130px, 0.7fr));
+    }
+
+    .site-footer__cta {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 560px) {
+    .site-footer {
+        padding-top: 2.5rem;
+    }
+
+    .site-footer__main {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.8rem 1rem;
+        padding-bottom: 2rem;
+    }
+
+    .site-footer__brand,
+    .site-footer__cta {
+        grid-column: 1 / -1;
+    }
+
+    .site-footer__bottom {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
 
 /* ---------- Boutons ---------- */

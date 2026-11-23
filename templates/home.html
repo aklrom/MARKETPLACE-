@@ -1,11 +1,176 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Marketplace</title>
-</head>
-<body>
-    <h1>Bienvenue sur la Marketplace !</h1>
-    <p>Ton site est en ligne avec succès ! 🎉</p>
-    <a href="/products/">Voir les produits</a>
-</body>
-</html>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}TWéWè — Achetez et vendez simplement{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'accounts/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="home-page">
+    <section class="home-hero" aria-labelledby="hero-title">
+        <div class="home-hero__copy" data-reveal>
+            <p class="home-eyebrow"><span aria-hidden="true"></span> La marketplace qui rapproche les bonnes affaires</p>
+            <h1 id="hero-title">Le bon plan<br>se trouve <span>ici.</span></h1>
+            <p class="home-hero__intro">
+                Découvrez des annonces, échangez directement avec les vendeurs
+                et organisez votre achat sur WhatsApp.
+            </p>
+            <div class="home-hero__actions">
+                <a class="btn btn-primary home-button" href="{% url 'product_list' %}">
+                    Découvrir les annonces
+                    <span aria-hidden="true">→</span>
+                </a>
+                {% if user.is_authenticated %}
+                    <a class="home-text-link" href="{% url 'product_create' %}">Mettre en vente <span aria-hidden="true">↗</span></a>
+                {% else %}
+                    <a class="home-text-link" href="{% url 'register' %}">Vendre sur TWéWè <span aria-hidden="true">↗</span></a>
+                {% endif %}
+            </div>
+            <p class="home-hero__note"><span aria-hidden="true">✦</span> Acheteurs et vendeurs échangent en direct.</p>
+        </div>
+
+        <div class="home-visual" data-reveal role="img" aria-label="Illustration de la marketplace TWéWè">
+            <div class="home-visual__sun" aria-hidden="true"></div>
+            <div class="home-visual__orbit home-visual__orbit--one" aria-hidden="true"></div>
+            <div class="home-visual__orbit home-visual__orbit--two" aria-hidden="true"></div>
+            <div class="market-card">
+                <div class="market-card__top">
+                    <span class="market-card__brand"><span class="brand__tag" aria-hidden="true"></span> TWéWè</span>
+                    <span class="market-card__status"><span aria-hidden="true"></span> En direct</span>
+                </div>
+                <div class="market-card__art" aria-hidden="true">
+                    <div class="market-card__shape market-card__shape--back"></div>
+                    <div class="market-card__shape market-card__shape--front"></div>
+                    <div class="market-card__spark market-card__spark--one">✳</div>
+                    <div class="market-card__spark market-card__spark--two">✦</div>
+                    <span class="market-card__tag">À vous de trouver</span>
+                </div>
+                <div class="market-card__bottom">
+                    <div>
+                        <span class="market-card__caption">DES ANNONCES, DES RENCONTRES</span>
+                        <p>Votre prochain coup de cœur</p>
+                    </div>
+                    <span class="market-card__arrow" aria-hidden="true">↗</span>
+                </div>
+            </div>
+            <div class="floating-note floating-note--chat">
+                <span class="floating-note__icon" aria-hidden="true">↗</span>
+                <span><strong>Un échange direct</strong><small>avec le vendeur</small></span>
+            </div>
+            <div class="floating-note floating-note--tag" aria-hidden="true">De bonnes trouvailles <span>✦</span></div>
+        </div>
+    </section>
+
+    <section class="home-benefits" aria-label="Les atouts de TWéWè" data-reveal>
+        <article class="benefit">
+            <span class="benefit__icon" aria-hidden="true">⌕</span>
+            <div><h2>Trouvez facilement</h2><p>Parcourez les annonces et repérez ce qui vous plaît.</p></div>
+        </article>
+        <article class="benefit">
+            <span class="benefit__icon benefit__icon--gold" aria-hidden="true">↗</span>
+            <div><h2>Échangez en direct</h2><p>Contactez le vendeur pour poser vos questions.</p></div>
+        </article>
+        <article class="benefit">
+            <span class="benefit__icon benefit__icon--green" aria-hidden="true">＋</span>
+            <div><h2>Vendez simplement</h2><p>Publiez votre annonce et présentez votre article.</p></div>
+        </article>
+    </section>
+
+    <section class="home-listings" id="annonces" aria-labelledby="listings-title">
+        <div class="home-section-heading" data-reveal>
+            <div>
+                <p class="home-eyebrow">La vitrine TWéWè</p>
+                <h2 id="listings-title">Les dernières annonces<span>.</span></h2>
+            </div>
+            <a class="home-text-link" href="{% url 'product_list' %}">Toutes les annonces <span aria-hidden="true">→</span></a>
+        </div>
+
+        {% if featured_products %}
+            <div class="home-product-grid">
+                {% for product in featured_products %}
+                    <a class="home-product" href="{% url 'product_detail' product.id %}" data-reveal>
+                        <div class="home-product__image">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+                            {% else %}
+                                <span class="home-product__placeholder" aria-hidden="true">✳</span>
+                                <span class="visually-hidden">Aucune photo</span>
+                            {% endif %}
+                            <span class="home-product__condition">{{ product.get_condition_display }}</span>
+                        </div>
+                        <div class="home-product__details">
+                            <span class="home-product__category">{{ product.category.name }}</span>
+                            <h3>{{ product.name }}</h3>
+                            <span class="home-product__price">{{ product.price|floatformat:"-2g" }} <small>FCFA</small></span>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="home-empty" data-reveal>
+                <span class="home-empty__icon" aria-hidden="true">✳</span>
+                <div>
+                    <h3>La vitrine est prête pour vos annonces.</h3>
+                    <p>Soyez parmi les premiers à partager un article avec la communauté.</p>
+                </div>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-primary" href="{% url 'product_create' %}">Publier une annonce <span aria-hidden="true">→</span></a>
+                {% else %}
+                    <a class="btn btn-primary" href="{% url 'register' %}">Créer mon compte <span aria-hidden="true">→</span></a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="home-how" aria-labelledby="how-title">
+        <div class="home-how__intro" data-reveal>
+            <p class="home-eyebrow">Simple comme bonjour</p>
+            <h2 id="how-title">De l’annonce<br>à la rencontre<span>.</span></h2>
+            <p>TWéWè facilite la mise en relation. Vous gardez la main sur vos échanges.</p>
+            <a class="home-text-link" href="{% url 'product_list' %}">C’est parti <span aria-hidden="true">→</span></a>
+        </div>
+        <ol class="home-steps">
+            <li data-reveal><span class="home-step__number">01</span><div><h3>Explorez</h3><p>Découvrez les articles proposés sur la marketplace.</p></div><span class="home-step__symbol" aria-hidden="true">⌕</span></li>
+            <li data-reveal><span class="home-step__number">02</span><div><h3>Échangez</h3><p>Contactez le vendeur et obtenez les détails utiles.</p></div><span class="home-step__symbol" aria-hidden="true">↗</span></li>
+            <li data-reveal><span class="home-step__number">03</span><div><h3>Concluez</h3><p>Mettez-vous d’accord directement, à votre rythme.</p></div><span class="home-step__symbol" aria-hidden="true">✦</span></li>
+        </ol>
+    </section>
+
+    <section class="home-faq" aria-labelledby="faq-title" data-reveal>
+        <div>
+            <p class="home-eyebrow">Besoin d’un éclaircissement ?</p>
+            <h2 id="faq-title">Questions fréquentes<span>.</span></h2>
+        </div>
+        <div class="home-faq__items">
+            <details>
+                <summary>Comment acheter un article ?</summary>
+                <p>Ouvrez une annonce, consultez ses détails puis contactez le vendeur pour échanger et convenir des modalités.</p>
+            </details>
+            <details>
+                <summary>Comment vendre sur TWéWè ?</summary>
+                <p>Créez un compte, publiez votre annonce avec une description et un prix, puis échangez directement avec les personnes intéressées.</p>
+            </details>
+            <details>
+                <summary>Comment se déroule le paiement ?</summary>
+                <p>Les acheteurs et les vendeurs s’organisent directement entre eux. Vérifiez les détails avec le vendeur avant de conclure.</p>
+            </details>
+        </div>
+    </section>
+
+    <section class="home-cta" data-reveal>
+        <div>
+            <p class="home-eyebrow">Votre prochaine bonne affaire commence ici</p>
+            <h2>On regarde ?</h2>
+        </div>
+        <a class="btn btn-primary home-button" href="{% url 'product_list' %}">Voir les annonces <span aria-hidden="true">→</span></a>
+        <span class="home-cta__spark" aria-hidden="true">✳</span>
+    </section>
+</div>
+<button class="home-top" type="button" aria-label="Retour en haut" hidden>↑</button>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'accounts/home.js' %}" defer></script>
+{% endblock %}
