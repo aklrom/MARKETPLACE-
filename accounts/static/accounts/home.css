@@ -188,10 +188,9 @@
     font-weight: 800;
 }
 
-.market-card__brand .brand__tag {
-    width: 1rem;
-    height: 0.75rem;
-    --hole: #fff;
+.market-card__brand .brand__shop {
+    width: 1.15rem;
+    height: 1.15rem;
 }
 
 .market-card__status {

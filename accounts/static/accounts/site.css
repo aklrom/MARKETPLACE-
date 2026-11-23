@@ -124,7 +124,6 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .brand {
-    --hole: var(--ink);
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
@@ -142,7 +141,6 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .brand--on-light {
-    --hole: var(--paper);
     color: var(--ink);
 }
 
@@ -150,22 +148,17 @@ h1, h2, h3, h4, h5, h6,
     color: var(--ink);
 }
 
-/* Le logo : une petite étiquette percée */
-.brand__tag {
+/* Icône de boutique */
+.brand__shop {
     flex: none;
-    width: 1.5rem;
-    height: 1.1rem;
-    background:
-        radial-gradient(circle at 0.7rem 50%, var(--hole) 0 0.15rem, transparent 0.16rem),
-        var(--saffron);
-    clip-path: polygon(0.55rem 0, 100% 0, 100% 100%, 0.55rem 100%, 0 50%);
-    transform: rotate(-10deg);
-    transition: transform 0.45s cubic-bezier(0.3, 1.9, 0.5, 1);
+    width: 1.65rem;
+    height: 1.65rem;
+    transition: transform 0.25s ease;
 }
 
-.brand:hover .brand__tag,
-.brand:focus-visible .brand__tag {
-    transform: rotate(10deg);
+.brand:hover .brand__shop,
+.brand:focus-visible .brand__shop {
+    transform: translateY(-2px);
 }
 
 .site-nav__links {
@@ -230,7 +223,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .site-footer .brand {
-    --hole: var(--ink-deep);
+    color: #fff;
 }
 
 .site-footer__brand > p {
@@ -1124,7 +1117,7 @@ main section h2 {
 /* ---------- Mouvement réduit ---------- */
 @media (prefers-reduced-motion: reduce) {
     .price-tag,
-    .brand__tag,
+    .brand__shop,
     .btn,
     .site-nav__link::after,
     .alert[data-autohide] {
