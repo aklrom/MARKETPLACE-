@@ -1,10 +1,9 @@
 from decimal import Decimal
-
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models.aggregates import Avg
-
+from cloudinary.models import CloudinaryField  # <-- AJOUTER CET IMPORT
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -38,7 +37,10 @@ class Product(models.Model):
     )
     name = models.CharField(max_length=200)
     description = models.TextField()
-    image = models.ImageField(upload_to="products/%Y/%m/", blank=True)
+    
+    # <-- REMPLACER models.ImageField PAR CloudinaryField
+    image = CloudinaryField('image', folder='products/', blank=True, null=True)
+    
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -70,11 +72,9 @@ class Product(models.Model):
 
     @property
     def average_rating(self):
-        """Calcule la moyenne des notes, retourne 0 s'il n'y a pas d'avis"""
         result = self.reviews.aggregate(Avg('rating'))['rating__avg']
         return round(result, 1) if result is not None else 0.0
 
     @property
     def reviews_count(self):
-        """Retourne le nombre total d'avis"""
         return self.reviews.count()
