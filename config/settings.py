@@ -160,9 +160,7 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MEDIA_URL = '/media/'
 
-# Clé API Brevo (à récupérer sur app.brevo.com -> Paramètres -> Clés API -> Clé SMTP)
-BREVO_API_KEY = 'votre_cle_api_brevo_ici'
-
-# Email expéditeur (DOIT être un email vérifié dans votre compte Brevo, ex: votre email personnel)
-BREVO_SENDER_EMAIL = 'votre.email.verifie@gmail.com'
-BREVO_SENDER_NAME = 'MARKETPLACE TWéwè'
+# === Configuration Brevo pour l'envoi des emails OTP ===
+BREVO_API_KEY = os.getenv('BREVO_API_KEY')
+BREVO_SENDER_EMAIL = os.getenv('BREVO_SENDER_EMAIL')
+BREVO_SENDER_NAME = os.getenv('BREVO_SENDER_NAME', 'MARKETPLACE')  # Valeur par défaut si vide

@@ -50,7 +50,17 @@
                         {% if form.first_name.errors %}
                             <div class="text-danger small mt-1">{{ form.first_name.errors }}</div>
                         {% endif %}
-
+                                                <!-- === AJOUT DU CHAMP EMAIL ICI === -->
+                        <div class="mb-3">
+                            <label class="form-label" id="email_label" for="id_email">Adresse email</label>
+                            <input aria-labelledby="email_label" type="email" name="email" id="id_email"
+                                class="form-control" placeholder="exemple@email.com"
+                                value="{{ form.email.value|default:'' }}" required>
+                        </div>
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                        {% endif %}
+                        <!-- ================================= -->
                         <div class="mb-3">
                             <label class="form-label" id="whatsapp_label" for="id_whatsapp_number">Numéro WhatsApp</label>
                             <input aria-labelledby="whatsapp_label" type="tel" name="whatsapp_number" id="id_whatsapp_number"
